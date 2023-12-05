@@ -2,9 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Formik, Field, Form } from "formik";
-// import jwt from "jsonwebtoken";
+
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const login = async (values) => {
     try {
       const response = await fetch("http://localhost:3000/users/login", {
@@ -23,7 +25,8 @@ const Login = () => {
       if (response.ok) {
         console.log("logged in");
         localStorage.setItem("token", data.token);
-        console.log(data.token);
+        console.log(data);
+        navigate("/Profile");
         try {
           jwt.verify(token, "your-secret-key");
         } catch (error) {

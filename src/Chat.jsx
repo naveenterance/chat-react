@@ -1,41 +1,33 @@
-import React, { useState, useEffect } from "react";
-import * as jose from "jose";
-import { Navigate } from "react-router-dom";
+import React from "react";
+import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Formik, Field, Form } from "formik";
 
-const Profile = () => {
-  const [isLoggedOut, setLoggedOut] = useState(false);
-  const token = localStorage.getItem("token");
+const queryClient = new QueryClient();
 
-  if (!token) {
-    return <Navigate to="/Login" />;
-  }
+export default function Appold() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MyComponent />
+    </QueryClientProvider>
+  );
+}
 
-  console.log(token);
-  const claims = jose.decodeJwt(token);
-  console.log(claims.userId);
-  const fetchData = async () => {
-    const response = await fetch(`http://localhost:4000/log/${claims.userId}`);
-    const data = await response.json();
-    return data;
-  };
+const fetchData = async () => {
+  const response = await fetch("http://localhost:4000/log");
+  const data = await response.json();
+  return data;
+};
 
-  const Logout = () => {
-    localStorage.removeItem("token");
-    setLoggedOut(true);
-  };
-  if (isLoggedOut) {
-    return <Navigate to="/Login" />;
-  }
+const MyComponent = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/users/${claims.userId}`
-        );
+          "http://localhost:3000/users/655e10baecfde75cbb7394ca"
+        ); // Replace with the actual API endpoint and user ID
         const data = await response.json();
         setUser(data);
       } catch (error) {
@@ -83,8 +75,6 @@ const Profile = () => {
   return (
     <>
       <div>
-        <div>Login successful:{claims.userId}</div>
-        <button onClick={Logout}>Logout</button>
         <div>
           {user ? (
             <div>
@@ -127,5 +117,3 @@ const Profile = () => {
     </>
   );
 };
-
-export default Profile;
