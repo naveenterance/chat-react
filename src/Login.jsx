@@ -45,7 +45,7 @@ const Login = () => {
       initialValues={{
         // Initialize your form fields here
         name: "",
-        email: "",
+        password: "",
       }}
       onSubmit={login}
     >
@@ -53,8 +53,8 @@ const Login = () => {
         <label htmlFor="name">Name</label>
         <Field type="text" id="name" name="name" />
 
-        <label htmlFor="email">Email</label>
-        <Field type="email" id="email" name="email" />
+        <label htmlFor="password">Password</label>
+        <Field type="password" id="password" name="password" />
 
         <button type="submit">login</button>
       </Form>

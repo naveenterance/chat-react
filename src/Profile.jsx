@@ -6,12 +6,6 @@ import { Formik, Field, Form } from "formik";
 
 const queryClient = new QueryClient();
 
-const fetchUserData = async (userId) => {
-  const response = await fetch(`http://localhost:3000/users/${userId}`);
-  const data = await response.json();
-  return data;
-};
-
 export default function Profile() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -31,16 +25,8 @@ const ProfileComponent = () => {
   }
   const claims = jose.decodeJwt(token);
 
-  const {
-    data: user,
-    isLoading: userLoading,
-    isError: userError,
-  } = useQuery("userData", () => fetchUserData(claims.userId));
-
   const { data, isLoading, isError, error } = useQuery("myData", () =>
-    fetch(`http://localhost:4000/log/${claims.userId}`).then((res) =>
-      res.json()
-    )
+    fetch(`http://localhost:4000/log/${claims.name}`).then((res) => res.json())
   );
 
   const Logout = () => {
@@ -73,21 +59,9 @@ const ProfileComponent = () => {
   return (
     <>
       <div>
-        <div>Login successful: {claims.userId}</div>
+        <div>Login successful: {claims.name}</div>
         <button onClick={Logout}>Logout</button>
-        <div>
-          {userLoading ? (
-            <p>Loading user...</p>
-          ) : userError ? (
-            <p>Error loading user: {userError.message}</p>
-          ) : (
-            <div>
-              <p>ID: {user._id}</p>
-              <p>Username: {user.name}</p>
-              {/* Add other user properties as needed */}
-            </div>
-          )}
-        </div>
+
         {isLoading ? (
           <p>Loading...</p>
         ) : isError ? (
@@ -104,16 +78,13 @@ const ProfileComponent = () => {
 
         <Formik
           initialValues={{
-            sender: "",
+            sender: claims.name,
             receiver: "",
             message: "",
           }}
           onSubmit={(values) => add(values)}
         >
           <Form>
-            <label htmlFor="sender">sender</label>
-            <Field type="text" id="sender" name="sender" />
-
             <label htmlFor="receiver">receiver</label>
             <Field type="text" id="receiver" name="receiver" />
 
