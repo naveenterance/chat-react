@@ -29,6 +29,23 @@ const ProfileComponent = () => {
     fetch(`http://localhost:4000/log/${claims.name}`).then((res) => res.json())
   );
 
+  const { receivers, cisLoading, cisError, cerror } = useQuery(
+    "myContacts",
+    async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/contacts/${claims.name}`
+        );
+        const result = await response.json();
+        console.log("Contacts Data:", result); // Log the received data
+        return result;
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+        throw error;
+      }
+    }
+  );
+
   const Logout = () => {
     localStorage.removeItem("token");
     setLoggedOut(true);
@@ -60,21 +77,43 @@ const ProfileComponent = () => {
     <>
       <div>
         <div>Login successful: {claims.name}</div>
+        <div>
+          {cisLoading ? (
+            <p>Loading...</p>
+          ) : cisError ? (
+            <p>Error: {cerror.message}</p>
+          ) : (
+            <div>
+              <p>Contacts Data: {JSON.stringify(receivers)}</p>
+              {receivers ? (
+                <ul>
+                  {receivers.map((receiver, index) => (
+                    <li key={index}>{receiver}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No contacts available.</p>
+              )}
+            </div>
+          )}
+        </div>
         <button onClick={Logout}>Logout</button>
-
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : isError ? (
-          <p>Error: {error.message}</p>
-        ) : (
-          <div>
-            {data.map((item) => (
-              <p key={item._id}>
-                {item.sender}----{item.receiver}----{item.message}
-              </p>
-            ))}
-          </div>
-        )}
+        <div>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : isError ? (
+            <p>Error: {error.message}</p>
+          ) : (
+            <div>
+              {data.map((item) => (
+                <p key={item._id}>
+                  {item.sender}----{item.receiver}----{item.message}-----
+                  {item.date}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
 
         <Formik
           initialValues={{
