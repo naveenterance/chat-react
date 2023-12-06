@@ -3,6 +3,7 @@ import * as jose from "jose";
 import { useNavigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Formik, Field, Form } from "formik";
+import * as Yup from "yup";
 
 const queryClient = new QueryClient();
 
@@ -14,51 +15,59 @@ export default function Profile() {
   );
 }
 
+const SignupSchema = Yup.object().shape({
+  receiver: Yup.string().required("Required"),
+});
+
 const ProfileComponent = () => {
   const [isLoggedOut, setLoggedOut] = useState(false);
+  const [client, setclient] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const [receiver, setReceiver] = useState("initialReceiverValue");
 
+  useEffect(() => {
+    setReceiver(client);
+  }, [client]);
+
+  //token check
   if (!token || isLoggedOut) {
     navigate("/Login");
     return null;
   }
   const claims = jose.decodeJwt(token);
 
+  //chat log fetch
   const { data, isLoading, isError, error } = useQuery("myData", () =>
     fetch(`http://localhost:4000/log/${claims.name}`).then((res) => res.json())
   );
 
-  const { receivers, cisLoading, cisError, cerror } = useQuery(
-    "myContacts",
-    async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:4000/contacts/${claims.name}`
-        );
-        const result = await response.json();
-        console.log("Contacts Data:", result); // Log the received data
-        return result;
-      } catch (error) {
-        console.error("Error fetching contacts:", error);
-        throw error;
-      }
-    }
+  //contacts fetch
+  const {
+    data: receivers,
+    isLoading: cisLoading,
+    isError: cisError,
+    error: cerror,
+  } = useQuery("myContacts", () =>
+    fetch(`http://localhost:4000/contacts/${claims.name}`).then((res) =>
+      res.json()
+    )
   );
 
+  //logout function
   const Logout = () => {
     localStorage.removeItem("token");
     setLoggedOut(true);
     navigate("/Login");
   };
 
+  //sent message
   const add = async (values) => {
     try {
       const response = await fetch("http://localhost:4000/log", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // ...other headers
         },
         body: JSON.stringify(values),
       });
@@ -73,24 +82,35 @@ const ProfileComponent = () => {
     }
   };
 
+  //setclient
+  const select = (receiver) => {
+    setclient(receiver);
+    console.log(client);
+  };
+
+  //view
   return (
     <>
       <div>
         <div>Login successful: {claims.name}</div>
         <div>
+          <p>CONTACTS</p>
           {cisLoading ? (
             <p>Loading...</p>
           ) : cisError ? (
             <p>Error: {cerror.message}</p>
           ) : (
             <div>
-              <p>Contacts Data: {JSON.stringify(receivers)}</p>
-              {receivers ? (
-                <ul>
-                  {receivers.map((receiver, index) => (
-                    <li key={index}>{receiver}</li>
+              {receivers &&
+              receivers.receivers &&
+              receivers.receivers.length > 0 ? (
+                <div>
+                  {receivers.receivers.map((receiver) => (
+                    <button onClick={() => select(receiver)} key={receiver}>
+                      {receiver}
+                    </button>
                   ))}
-                </ul>
+                </div>
               ) : (
                 <p>No contacts available.</p>
               )}
@@ -107,7 +127,13 @@ const ProfileComponent = () => {
             <div>
               {data.map((item) => (
                 <p key={item._id}>
-                  {item.sender}----{item.receiver}----{item.message}-----
+                  {item.sender == claims.name ? <span>YOU</span> : item.sender}
+                  -----{item.message}-----
+                  {item.receiver == claims.name ? (
+                    <span>YOU</span>
+                  ) : (
+                    item.receiver
+                  )}
                   {item.date}
                 </p>
               ))}
@@ -118,19 +144,43 @@ const ProfileComponent = () => {
         <Formik
           initialValues={{
             sender: claims.name,
-            receiver: "",
+            receiver: receiver,
             message: "",
           }}
+          enableReinitialize={true}
+          validationSchema={SignupSchema}
           onSubmit={(values) => add(values)}
         >
           <Form>
-            <label htmlFor="receiver">receiver</label>
-            <Field type="text" id="receiver" name="receiver" />
+            <p>
+              {!client ? (
+                <span>Select a contact</span>
+              ) : (
+                <span>TO:{client}</span>
+              )}
+            </p>
 
             <label htmlFor="message">Message</label>
             <Field type="text" id="message" name="message" />
 
             <button type="submit">Submit</button>
+          </Form>
+        </Formik>
+        <Formik
+          initialValues={{
+            sender: claims.name,
+            receiver: "",
+            message: "[Added as a contact]",
+          }}
+          enableReinitialize={true}
+          validationSchema={SignupSchema}
+          onSubmit={(values) => add(values)}
+        >
+          <Form>
+            <label htmlFor="receiver">New Contact</label>
+            <Field type="text" id="receiver" name="receiver" />
+
+            <button type="submit">ADD</button>
           </Form>
         </Formik>
       </div>
