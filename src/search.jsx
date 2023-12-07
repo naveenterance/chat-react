@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
-const Search = () => {
+const Search = ({ onValueChange }) => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -28,6 +28,9 @@ const Search = () => {
 
   const handleOnSelect = (item) => {
     console.log(item);
+
+    // Call the callback function from the parent with the selected item
+    onValueChange(item);
   };
 
   const handleOnFocus = () => {
@@ -37,7 +40,9 @@ const Search = () => {
   const formatResult = (user) => {
     return (
       <>
-        <span style={{ display: "block", textAlign: "left" }}>{user.name}</span>
+        <span style={{ display: "block", textAlign: "left" }} id={user._id}>
+          {user.name}
+        </span>
       </>
     );
   };
@@ -48,13 +53,14 @@ const Search = () => {
         <header className="App-header">
           <div style={{ width: 400 }}>
             <ReactSearchAutocomplete
-              items={users} // Use 'items' instead of 'users'
+              items={users}
               onSearch={handleOnSearch}
               onHover={handleOnHover}
               onSelect={handleOnSelect}
               onFocus={handleOnFocus}
               autoFocus
               formatResult={formatResult}
+              autoHighlight={false}
             />
           </div>
         </header>

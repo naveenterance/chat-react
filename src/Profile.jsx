@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
-import Search from "./search";
+import Search from "./Search";
 
 const queryClient = new QueryClient();
 
@@ -25,15 +25,16 @@ const ProfileComponent = () => {
   const [client, setclient] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const [receiver, setReceiver] = useState("initialReceiverValue");
+  const [receiver, setReceiver] = useState("");
 
-  //props
-  // const [childValue, setChildValue] = useState("");
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  // const handleChildValueChange = (value) => {
-  //   setChildValue(value);
-  // };
-  //props
+  // Callback function to handle the selected item
+  const handleSelectedItem = (item) => {
+    setSelectedItem(item);
+    // Do something with the selected item in the parent component
+    console.log("Selected Item in App Component:", item);
+  };
 
   useEffect(() => {
     setReceiver(client);
@@ -100,6 +101,17 @@ const ProfileComponent = () => {
   //view
   return (
     <>
+      <div>
+        <h1>App Component</h1>
+        {/* Pass the callback function as a prop to the Search component */}
+
+        {/* Display the search results in the parent component */}
+        <div>
+          <h2>Search Results</h2>
+          <p>Selected Item: {selectedItem ? selectedItem.name : "None"}</p>
+          <Search onValueChange={handleSelectedItem} />
+        </div>
+      </div>
       <div>
         <div>Login successful: {claims.name}</div>
         <div>
@@ -178,7 +190,7 @@ const ProfileComponent = () => {
         <Formik
           initialValues={{
             sender: claims.name,
-            receiver: "",
+            receiver: selectedItem ? selectedItem.name : "",
             message: "[Added as a contact]",
           }}
           enableReinitialize={true}
@@ -186,13 +198,12 @@ const ProfileComponent = () => {
           onSubmit={(values) => add(values)}
         >
           <Form>
-            <label htmlFor="receiver">New Contact</label>
-            <Field type="text" id="receiver" name="receiver" />
+            {/* <label htmlFor="receiver">New Contact</label>
+            <Field type="text" id="receiver" name="receiver" /> */}
 
             <button type="submit">ADD</button>
           </Form>
         </Formik>
-        <Search />
       </div>
     </>
   );
