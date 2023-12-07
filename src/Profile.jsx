@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
+import Search from "./search";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,14 @@ const ProfileComponent = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [receiver, setReceiver] = useState("initialReceiverValue");
+
+  //props
+  // const [childValue, setChildValue] = useState("");
+
+  // const handleChildValueChange = (value) => {
+  //   setChildValue(value);
+  // };
+  //props
 
   useEffect(() => {
     setReceiver(client);
@@ -183,6 +192,7 @@ const ProfileComponent = () => {
             <button type="submit">ADD</button>
           </Form>
         </Formik>
+        <Search />
       </div>
     </>
   );
