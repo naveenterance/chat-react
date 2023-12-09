@@ -26,9 +26,13 @@ const ProfileComponent = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [receiver, setReceiver] = useState("");
-
   const [selectedItem, setSelectedItem] = useState(null);
-
+  //token check
+  if (token == null || isLoggedOut) {
+    console.log(token, isLoggedOut);
+    navigate("/Home");
+    return null;
+  }
   // Callback function to handle the selected item
   const handleSelectedItem = (item) => {
     setSelectedItem(item);
@@ -40,12 +44,13 @@ const ProfileComponent = () => {
     setReceiver(client);
   }, [client]);
 
-  //token check
-  if (!token || isLoggedOut) {
-    navigate("/Login");
-    return null;
-  }
   const claims = jose.decodeJwt(token);
+
+  // Function to refresh queries
+  const refreshQueries = () => {
+    queryClient.invalidateQueries("myData");
+    queryClient.invalidateQueries("myContacts");
+  };
 
   //chat log fetch
   const { data, isLoading, isError, error } = useQuery("myData", () =>
@@ -84,11 +89,35 @@ const ProfileComponent = () => {
 
       if (response.ok) {
         console.log("Value posted to the API successfully!");
+        // Refresh queries after posting a message
+        refreshQueries();
       } else {
         console.error("Failed to post value to the API:", response.status);
       }
     } catch (error) {
       console.error("Failed to post value to the API:", error);
+    }
+  };
+
+  //delete contact
+  const deleteContact = async (receiver) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/contacts/${claims.name}/${receiver}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        console.log("Contact deleted successfully!");
+        // Refresh queries after deleting a contact
+        refreshQueries();
+      } else {
+        console.error("Failed to delete contact:", response.status);
+      }
+    } catch (error) {
+      console.error("Failed to delete contact:", error);
     }
   };
 
@@ -98,14 +127,22 @@ const ProfileComponent = () => {
     console.log(client);
   };
 
-  //view
+  // Fetch data every 5 seconds
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refreshQueries();
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
   return (
     <>
       <div>
         <h1>App Component</h1>
-        {/* Pass the callback function as a prop to the Search component */}
 
-        {/* Display the search results in the parent component */}
         <div>
           <h2>Search Results</h2>
           <p>Selected Item: {selectedItem ? selectedItem.name : "None"}</p>
@@ -127,9 +164,14 @@ const ProfileComponent = () => {
               receivers.receivers.length > 0 ? (
                 <div>
                   {receivers.receivers.map((receiver) => (
-                    <button onClick={() => select(receiver)} key={receiver}>
-                      {receiver}
-                    </button>
+                    <div key={receiver}>
+                      <button onClick={() => select(receiver)}>
+                        {receiver}
+                      </button>
+                      <button onClick={() => deleteContact(receiver)}>
+                        Delete {receiver}
+                      </button>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -140,6 +182,7 @@ const ProfileComponent = () => {
         </div>
         <button onClick={Logout}>Logout</button>
         <div>
+          <h2>Messages</h2>
           {isLoading ? (
             <p>Loading...</p>
           ) : isError ? (
@@ -198,9 +241,6 @@ const ProfileComponent = () => {
           onSubmit={(values) => add(values)}
         >
           <Form>
-            {/* <label htmlFor="receiver">New Contact</label>
-            <Field type="text" id="receiver" name="receiver" /> */}
-
             <button type="submit">ADD</button>
           </Form>
         </Formik>
