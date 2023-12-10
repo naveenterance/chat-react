@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import Search from "./Search";
 import Home from "./Home";
 
+// QueryClient wrapping start
 const queryClient = new QueryClient();
 
 export default function Profile() {
@@ -16,51 +17,71 @@ export default function Profile() {
     </QueryClientProvider>
   );
 }
+// QueryClient wrapping end
 
+// Yup schema start
 const SignupSchema = Yup.object().shape({
   receiver: Yup.string().required("Required"),
 });
+//Yup schema End
 
 const ProfileComponent = () => {
   const [isLoggedOut, setLoggedOut] = useState(false);
-  const [client, setclient] = useState("");
+  const [client, setclient] = useState("All");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const [receiver, setReceiver] = useState("All");
+  const [receiver, setReceiver] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
 
-  //token check
+  //token check start
   if (token == null || isLoggedOut) {
     console.log(token, isLoggedOut);
 
     return <Home />;
   }
+  //token check end
 
-  // Callback function to handle the selected item
   const handleSelectedItem = (item) => {
     setSelectedItem(item);
-    // Do something with the selected item in the parent component
-    console.log("Selected Item in App Component:", item);
   };
 
   useEffect(() => {
     setReceiver(client);
+    console.log(receiver);
   }, [client]);
 
   const claims = jose.decodeJwt(token);
 
-  // Function to refresh queries
+  // Function to refresh queries start
   const refreshQueries = () => {
     queryClient.invalidateQueries("myData");
     queryClient.invalidateQueries("myContacts");
   };
+  // Function to refresh queries end
 
-  //chat log fetch
+  //setclient
+  const select = (receiver) => {
+    setclient(receiver);
+    console.log(client);
+  };
+
+  // Fetch data every 5 seconds
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refreshQueries();
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  //chat log fetch start
   const { data, isLoading, isError, error } = useQuery("myData", () =>
     fetch(`http://localhost:4000/log/${claims.name}`).then((res) => res.json())
   );
-
-  //contacts fetch
+  //chat log fetch end
+  //contacts fetch start
   const {
     data: receivers,
     isLoading: cisLoading,
@@ -71,15 +92,15 @@ const ProfileComponent = () => {
       res.json()
     )
   );
-
-  //logout function
+  //contacts fetch end
+  //logout function start
   const Logout = () => {
     localStorage.removeItem("token");
     setLoggedOut(true);
     navigate("/Login");
   };
-
-  //sent message
+  //logout function end
+  //sent message start
   const add = async (values) => {
     try {
       const response = await fetch("http://localhost:4000/log", {
@@ -101,8 +122,8 @@ const ProfileComponent = () => {
       console.error("Failed to post value to the API:", error);
     }
   };
-
-  //delete contact
+  //sent message end
+  //delete contact start
   const deleteContact = async (receiver) => {
     try {
       const response = await fetch(
@@ -123,37 +144,39 @@ const ProfileComponent = () => {
       console.error("Failed to delete contact:", error);
     }
   };
-
-  //setclient
-  const select = (receiver) => {
-    setclient(receiver);
-    console.log(client);
-  };
-
-  // Fetch data every 5 seconds
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      refreshQueries();
-    }, 5000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  //delete contact end
 
   return (
     <>
       <div>
-        <h1>App Component</h1>
+        <h1>{claims.name}</h1>
 
         <div>
           <h2>Search Results</h2>
-          <p>Selected Item: {selectedItem ? selectedItem.name : "None"}</p>
           <Search onValueChange={handleSelectedItem} />
+          {selectedItem ? (
+            <Formik
+              initialValues={{
+                sender: claims.name,
+                receiver: selectedItem ? selectedItem.name : "",
+                message: "[Added as a contact]",
+              }}
+              enableReinitialize={true}
+              validationSchema={SignupSchema}
+              onSubmit={(values) => add(values)}
+            >
+              <Form>
+                <button type="submit">
+                  ADD {selectedItem.name} as contact?
+                </button>
+              </Form>
+            </Formik>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       <div>
-        <div>Login successful: {claims.name}</div>
         <div>
           <p>CONTACTS</p>
           {cisLoading ? (
@@ -184,6 +207,7 @@ const ProfileComponent = () => {
             </div>
           )}
         </div>
+
         <button onClick={Logout}>Logout</button>
         <div>
           <h2>Messages</h2>
@@ -195,8 +219,9 @@ const ProfileComponent = () => {
             <div>
               {data.map((item) => (
                 <p key={item._id}>
+                  {console.log(receiver)}
                   {item.message !== "[Added as a contact]" &&
-                  (receiver === "All" ||
+                  (receiver == "All" ||
                     item.sender === receiver ||
                     item.receiver === receiver) ? (
                     <>
@@ -219,46 +244,35 @@ const ProfileComponent = () => {
             </div>
           )}
         </div>
+        {receiver != "All" ? (
+          <Formik
+            initialValues={{
+              sender: claims.name,
+              receiver: receiver,
+              message: "",
+            }}
+            enableReinitialize={true}
+            validationSchema={SignupSchema}
+            onSubmit={(values) => add(values)}
+          >
+            <Form>
+              <p>
+                {!client ? (
+                  <span>Select a contact</span>
+                ) : (
+                  <span>TO:{client}</span>
+                )}
+              </p>
 
-        <Formik
-          initialValues={{
-            sender: claims.name,
-            receiver: receiver,
-            message: "",
-          }}
-          enableReinitialize={true}
-          validationSchema={SignupSchema}
-          onSubmit={(values) => add(values)}
-        >
-          <Form>
-            <p>
-              {!client ? (
-                <span>Select a contact</span>
-              ) : (
-                <span>TO:{client}</span>
-              )}
-            </p>
+              <label htmlFor="message">Message</label>
+              <Field type="text" id="message" name="message" />
 
-            <label htmlFor="message">Message</label>
-            <Field type="text" id="message" name="message" />
-
-            <button type="submit">Submit</button>
-          </Form>
-        </Formik>
-        <Formik
-          initialValues={{
-            sender: claims.name,
-            receiver: selectedItem ? selectedItem.name : "",
-            message: "[Added as a contact]",
-          }}
-          enableReinitialize={true}
-          validationSchema={SignupSchema}
-          onSubmit={(values) => add(values)}
-        >
-          <Form>
-            <button type="submit">ADD</button>
-          </Form>
-        </Formik>
+              <button type="submit">Submit</button>
+            </Form>
+          </Formik>
+        ) : (
+          ""
+        )}
       </div>
     </>
   );
