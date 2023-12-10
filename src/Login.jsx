@@ -6,7 +6,10 @@ import { Formik, Field, Form } from "formik";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [Loginerror, setLoginerror] = useState(false);
+
   const navigate = useNavigate();
+
   const login = async (values) => {
     try {
       const response = await fetch("http://localhost:3000/users/login", {
@@ -35,30 +38,38 @@ const Login = () => {
         }
       } else {
         console.error("Failed to login value to the API:", response.status);
+        setLoginerror(true);
       }
     } catch (error) {
       console.error("Failed to login value to the API:", error);
+      setLoginerror(true);
     }
   };
   return (
-    <Formik
-      initialValues={{
-        // Initialize your form fields here
-        name: "",
-        password: "",
-      }}
-      onSubmit={login}
-    >
-      <Form>
-        <label htmlFor="name">Name</label>
-        <Field type="text" id="name" name="name" />
+    <div>
+      <Formik
+        initialValues={{
+          // Initialize your form fields here
+          name: "",
+          password: "",
+        }}
+        onSubmit={login}
+      >
+        <Form>
+          <label htmlFor="name">Name</label>
+          <Field type="text" id="name" name="name" />
 
-        <label htmlFor="password">Password</label>
-        <Field type="password" id="password" name="password" />
+          <label htmlFor="password">Password</label>
+          <Field type="password" id="password" name="password" />
 
-        <button type="submit">login</button>
-      </Form>
-    </Formik>
+          <button type="submit">login</button>
+        </Form>
+      </Formik>
+      <div>
+        {console.log(Loginerror)}
+        {Loginerror ? "UserName/Password is wrong" : ""}
+      </div>
+    </div>
   );
 };
 

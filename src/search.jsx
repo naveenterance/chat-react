@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
+import * as jose from "jose";
 
 const Search = ({ onValueChange }) => {
   const [users, setUsers] = useState([]);
+  const token = localStorage.getItem("token");
+  const claims = jose.decodeJwt(token);
 
   useEffect(() => {
     getUsers();
@@ -38,13 +41,13 @@ const Search = ({ onValueChange }) => {
   };
 
   const formatResult = (user) => {
-    return (
+    return user.name !== claims.name ? (
       <>
         <span style={{ display: "block", textAlign: "left" }} id={user._id}>
           {user.name}
         </span>
       </>
-    );
+    ) : null;
   };
 
   return (

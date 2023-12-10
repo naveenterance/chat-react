@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import Search from "./Search";
+import Home from "./Home";
 
 const queryClient = new QueryClient();
 
@@ -25,14 +26,16 @@ const ProfileComponent = () => {
   const [client, setclient] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const [receiver, setReceiver] = useState("");
+  const [receiver, setReceiver] = useState("All");
   const [selectedItem, setSelectedItem] = useState(null);
+
   //token check
   if (token == null || isLoggedOut) {
     console.log(token, isLoggedOut);
-    navigate("/Home");
-    return null;
+
+    return <Home />;
   }
+
   // Callback function to handle the selected item
   const handleSelectedItem = (item) => {
     setSelectedItem(item);
@@ -159,6 +162,7 @@ const ProfileComponent = () => {
             <p>Error: {cerror.message}</p>
           ) : (
             <div>
+              <button onClick={() => select("All")}>ALL</button>
               {receivers &&
               receivers.receivers &&
               receivers.receivers.length > 0 ? (
@@ -191,14 +195,25 @@ const ProfileComponent = () => {
             <div>
               {data.map((item) => (
                 <p key={item._id}>
-                  {item.sender == claims.name ? <span>YOU</span> : item.sender}
-                  -----{item.message}-----
-                  {item.receiver == claims.name ? (
-                    <span>YOU</span>
-                  ) : (
-                    item.receiver
-                  )}
-                  {item.date}
+                  {item.message !== "[Added as a contact]" &&
+                  (receiver === "All" ||
+                    item.sender === receiver ||
+                    item.receiver === receiver) ? (
+                    <>
+                      {item.sender === claims.name ? (
+                        <span>YOU</span>
+                      ) : (
+                        item.sender
+                      )}
+                      -----{item.message}-----
+                      {item.receiver === claims.name ? (
+                        <span>YOU</span>
+                      ) : (
+                        item.receiver
+                      )}
+                      {item.date}
+                    </>
+                  ) : null}
                 </p>
               ))}
             </div>
