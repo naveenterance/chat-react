@@ -6,6 +6,7 @@ import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import Search from "./Search";
 import Home from "./Home";
+import MessageViewer from "./MessageViewer";
 
 // QueryClient wrapping start
 const queryClient = new QueryClient();
@@ -27,7 +28,7 @@ const SignupSchema = Yup.object().shape({
 
 const ProfileComponent = () => {
   const [isLoggedOut, setLoggedOut] = useState(false);
-  const [client, setclient] = useState("All");
+  const [client, setclient] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [receiver, setReceiver] = useState("");
@@ -162,99 +163,111 @@ const ProfileComponent = () => {
   //setclient
   const select = (receiver) => {
     setclient(receiver);
+    setReceiver(receiver);
     handleUpdateView(receiver, claims.name);
     console.log(client);
   };
+  //setcient end
+  //seen
 
+  //seen
   return (
     <>
       <div className="flex">
-        <div className="w-1/2 p-4">
-          <h1 className="text-2xl mb-4">{claims.name}</h1>
-
+        {!receiver ? (
           <div>
-            <h2 className="text-xl">Search Results</h2>
-            {/* Replace 'Search' with your component */}
-            <Search onValueChange={handleSelectedItem} />
-            {selectedItem && (
-              <Formik
-                initialValues={{
-                  sender: claims.name,
-                  receiver: selectedItem ? selectedItem.name : "",
-                  message: "[Added as a contact]",
-                }}
-                enableReinitialize={true}
-                validationSchema={SignupSchema}
-                onSubmit={(values) => add(values)}
-              >
-                <Form>
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white px-4 py-2"
-                  >
-                    ADD {selectedItem.name} as contact?
-                  </button>
-                </Form>
-              </Formik>
-            )}
-          </div>
-        </div>
+            <div className="w-1/2 p-4">
+              <h1 className="text-2xl mb-4">{claims.name}</h1>
 
-        <div className="w-1/2 p-4">
-          <div className="mb-4">
-            <p className="text-lg">CONTACTS</p>
-            {cisLoading ? (
-              <p>Loading...</p>
-            ) : cisError ? (
-              <p className="text-red-500">Error: {cerror.message}</p>
-            ) : (
               <div>
-                <button
-                  onClick={() => select("All")}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 mt-2"
-                >
-                  ALL
-                </button>
-                {receivers &&
-                receivers.receivers &&
-                receivers.receivers.length > 0 ? (
-                  <div>
-                    {receivers.receivers.map((receiver) => (
-                      <div
-                        key={receiver}
-                        className="flex justify-between items-center mt-2"
+                <h2 className="text-xl">Search Results</h2>
+
+                <Search onValueChange={handleSelectedItem} />
+                {selectedItem && (
+                  <Formik
+                    initialValues={{
+                      sender: claims.name,
+                      receiver: selectedItem ? selectedItem.name : "",
+                      message: "[Added as a contact]",
+                    }}
+                    enableReinitialize={true}
+                    validationSchema={SignupSchema}
+                    onSubmit={(values) => add(values)}
+                  >
+                    <Form>
+                      <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2"
                       >
-                        <button
-                          onClick={() => select(receiver)}
-                          className="bg-blue-500 text-white px-4 py-2"
-                        >
-                          {receiver}
-                        </button>
-                        <button
-                          onClick={() => deleteContact(receiver)}
-                          className="bg-red-500 text-white px-4 py-2 ml-2"
-                        >
-                          Delete {receiver}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p>No contacts available.</p>
+                        ADD {selectedItem.name} as contact?
+                      </button>
+                    </Form>
+                  </Formik>
                 )}
               </div>
-            )}
+            </div>
+            <div className="w-1/2 p-4 mt-4 ">
+              <div className="mb-4">
+                <p className="text-lg">CONTACTS</p>
+                {cisLoading ? (
+                  <p>Loading...</p>
+                ) : cisError ? (
+                  <p className="text-red-500">Error: {cerror.message}</p>
+                ) : (
+                  <div>
+                    <button
+                      onClick={() => select("All")}
+                      className="bg-gray-200 text-gray-700 px-4 py-2 mt-2"
+                    >
+                      ALL
+                    </button>
+                    {receivers &&
+                    receivers.receivers &&
+                    receivers.receivers.length > 0 ? (
+                      <div>
+                        {receivers.receivers.map((receiver) => (
+                          <div
+                            key={receiver}
+                            className="flex justify-between items-center mt-2"
+                          >
+                            <button
+                              onClick={() => select(receiver)}
+                              className="bg-blue-500 text-white px-4 py-2"
+                            >
+                              {receiver}
+                              <MessageViewer
+                                sender={receiver}
+                                receiver={claims.name}
+                              />
+                            </button>
+                            <button
+                              onClick={() => deleteContact(receiver)}
+                              className="bg-red-500 text-white px-4 py-2 ml-2"
+                            >
+                              Delete {receiver}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p>No contacts available.</p>
+                    )}
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={Logout}
+                className="bg-red-500 text-white px-4 py-2 mt-4"
+              >
+                Logout
+              </button>
+            </div>
           </div>
-
-          <button
-            onClick={Logout}
-            className="bg-red-500 text-white px-4 py-2 mt-4"
-          >
-            Logout
-          </button>
-
+        ) : (
           <div className="mt-4">
-            <h2 className="text-2xl font-bold mb-4">Messages</h2>
+            <button onClick={() => setReceiver("")}>Go back</button>
+
+            <h2 className="text-2xl font-bold mb-4">Messages:{receiver}</h2>
             {isLoading ? (
               <p className="text-gray-500">Loading...</p>
             ) : isError ? (
@@ -290,9 +303,6 @@ const ProfileComponent = () => {
                 ))}
               </div>
             )}
-          </div>
-
-          {receiver !== "All" && (
             <Formik
               initialValues={{
                 sender: claims.name,
@@ -330,8 +340,8 @@ const ProfileComponent = () => {
                 </button>
               </Form>
             </Formik>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </>
   );
