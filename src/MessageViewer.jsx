@@ -32,7 +32,6 @@ const MessageViewer = ({ sender, receiver }) => {
         <p>Error: {error}</p>
       ) : (
         <>
-          <h2>-----</h2>
           {messageData.message && (
             <>
               <p>Message: {messageData.message}</p>

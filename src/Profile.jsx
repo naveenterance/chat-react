@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import Search from "./Search";
 import Home from "./Home";
 import MessageViewer from "./MessageViewer";
+import MessageList from "./MessageList";
 
 // QueryClient wrapping start
 const queryClient = new QueryClient();
@@ -54,27 +55,40 @@ const ProfileComponent = () => {
   const claims = jose.decodeJwt(token);
 
   // Function to refresh queries start
-  const refreshQueries = () => {
-    queryClient.invalidateQueries("myData");
-    queryClient.invalidateQueries("myContacts");
-  };
-  // Function to refresh queries end
+  // const refreshQueries = () => {
+  //   queryClient.invalidateQueries("myData");
+  //   queryClient.invalidateQueries("myContacts");
+  // };
+  // // Function to refresh queries end
 
-  // Fetch data every 5 seconds
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      refreshQueries();
-    }, 5000);
+  // // Fetch data every 5 seconds
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     refreshQueries();
+  //   }, 5000);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
 
   //chat log fetch start
-  const { data, isLoading, isError, error } = useQuery("myData", () =>
-    fetch(`http://localhost:4000/log/${claims.name}`).then((res) => res.json())
+  const { data, isLoading, isError, error } = useQuery(
+    "myData",
+    async () => {
+      const response = await fetch(`http://localhost:4000/log/${claims.name}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+
+      return response.json();
+    },
+    {
+      refetchInterval: 5000,
+    }
   );
+
   //chat log fetch end
   //contacts fetch start
   const {
@@ -82,11 +96,24 @@ const ProfileComponent = () => {
     isLoading: cisLoading,
     isError: cisError,
     error: cerror,
-  } = useQuery("myContacts", () =>
-    fetch(`http://localhost:4000/contacts/${claims.name}`).then((res) =>
-      res.json()
-    )
+  } = useQuery(
+    "myContacts",
+    async () => {
+      const response = await fetch(
+        `http://localhost:4000/contacts/${claims.name}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch contacts");
+      }
+
+      return response.json();
+    },
+    {
+      refetchInterval: 5000,
+    }
   );
+
   //contacts fetch end
   //logout function start
   const Logout = () => {
@@ -109,13 +136,14 @@ const ProfileComponent = () => {
       if (response.ok) {
         console.log("Value posted to the API successfully!");
         // Refresh queries after posting a message
-        refreshQueries();
+        // refreshQueries();
       } else {
         console.error("Failed to post value to the API:", response.status);
       }
     } catch (error) {
       console.error("Failed to post value to the API:", error);
     }
+    setSelectedItem();
   };
   //sent message end
   //delete contact start
@@ -174,6 +202,8 @@ const ProfileComponent = () => {
   return (
     <>
       <div className="flex">
+        <MessageList user={claims.name} />
+
         {!receiver ? (
           <div>
             <div className="w-1/2 p-4">
@@ -206,7 +236,7 @@ const ProfileComponent = () => {
                 )}
               </div>
             </div>
-            <div className="w-1/2 p-4 mt-4 ">
+            <div className="w-full p-4 mt-4 ">
               <div className="mb-4">
                 <p className="text-lg">CONTACTS</p>
                 {cisLoading ? (
@@ -235,10 +265,6 @@ const ProfileComponent = () => {
                               className="bg-blue-500 text-white px-4 py-2"
                             >
                               {receiver}
-                              <MessageViewer
-                                sender={receiver}
-                                receiver={claims.name}
-                              />
                             </button>
                             <button
                               onClick={() => deleteContact(receiver)}
