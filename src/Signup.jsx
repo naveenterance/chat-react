@@ -3,30 +3,33 @@ import { useMutation } from "react-query";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string()
-    .required("Username is required")
-    .test("user-exists", "Username not available", async function (value) {
-      if (value) {
-        const response = await fetch(`http://localhost:3000/users/${value}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await response.json();
-        return !data.exists;
-      }
-      return true;
-    }),
-  password: Yup.string().required("Password is required"),
-});
-
 const Signup = () => {
   const handleOnError = (error) => {
     console.error("An error occurred:", error);
     navigate("/");
   };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required("Username is required")
+      .test("user-exists", "Username not available", async function (value) {
+        if (value) {
+          const response = await fetch(`http://localhost:3000/users/${value}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await response.json();
+          return !data.exists;
+        }
+        return true;
+      }),
+    password: Yup.string().required("Password is required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Password confirmation is required"),
+  });
 
   const addMutation = useMutation(
     (values) =>
@@ -70,19 +73,59 @@ const Signup = () => {
       validationSchema={validationSchema}
       onSubmit={(values) => add(values)}
     >
-      <Form>
-        <label htmlFor="name">Name</label>
-        <Field type="text" id="name" name="name" />
-        <div style={{ color: "red" }}>
-          <ErrorMessage name="name" />
-        </div>
-        <label htmlFor="password">Password</label>
-        <Field type="text" id="password" name="password" />
-        <div style={{ color: "red" }}>
-          <ErrorMessage name="password" />
+      <Form className="mt-4 space-y-4 animate__animated animate__bounceIn">
+        <div className="flex flex-col">
+          <label htmlFor="name" className="text-sm font-medium">
+            Name
+          </label>
+          <Field
+            type="text"
+            id="name"
+            name="name"
+            className="mt-1 p-2 border rounded-md bg-slate-200  focus:outline-none focus:border-indigo-500"
+          />
+          <div className="text-red-500">
+            <ErrorMessage name="name" />
+          </div>
         </div>
 
-        <button type="submit">Submit</button>
+        <div className="flex flex-col">
+          <label htmlFor="password" className="text-sm font-medium">
+            Password
+          </label>
+          <Field
+            type="password"
+            id="password"
+            name="password"
+            className="mt-1 p-2 border rounded-md bg-slate-200 focus:outline-none focus:border-indigo-500"
+          />
+          <div className="text-red-500">
+            <ErrorMessage name="password" />
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="confirmPassword" className="text-sm font-medium">
+            Confirm Password
+          </label>
+          <Field
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            className="mt-1 p-2 border rounded-md bg-slate-200  focus:outline-none focus:border-indigo-500"
+          />
+          <div className="text-red-500">
+            <ErrorMessage name="confirmPassword" />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className=" hover:underline hover:decoration-green-500 hover:text-green-500 font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-green-500 justify-center items-center flex"
+        >
+          <img src="./signup.gif" className="mr-2" />
+          Sign up
+        </button>
       </Form>
     </Formik>
   );

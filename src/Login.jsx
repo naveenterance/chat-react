@@ -1,14 +1,19 @@
 import React from "react";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import { Formik, Field, Form } from "formik";
-
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [Loginerror, setLoginerror] = useState(false);
 
   const navigate = useNavigate();
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    password: Yup.string().required("Password is required"),
+  });
 
   const login = async (values) => {
     try {
@@ -53,22 +58,59 @@ const Login = () => {
           name: "",
           password: "",
         }}
+        validationSchema={validationSchema}
         onSubmit={login}
       >
-        <Form>
-          <label htmlFor="name">Name</label>
-          <Field type="text" id="name" name="name" />
+        <Form className="max-w-md mx-auto animate__animated animate__bounceIn">
+          <div className="mb-6">
+            <label
+              htmlFor="name"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Name
+            </label>
+            <Field
+              type="text"
+              id="name"
+              name="name"
+              className="bg-slate-200  w-full px-3 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
+            />
+            <div className="text-red-500">
+              <ErrorMessage name="name" />
+            </div>
+          </div>
 
-          <label htmlFor="password">Password</label>
-          <Field type="password" id="password" name="password" />
+          <div className="mb-6">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Password
+            </label>
+            <Field
+              type="password"
+              id="password"
+              name="password"
+              className="bg-slate-200  w-full px-3 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
+            />
+            <div className="text-red-500">
+              <ErrorMessage name="password" />
+            </div>
+          </div>
+          <div className="text-red-600 text-bold">
+            {console.log(Loginerror)}
+            {Loginerror ? "[UserName/Password incorrect]" : ""}
+          </div>
 
-          <button type="submit">login</button>
+          <button
+            type="submit"
+            className=" hover:underline hover:decoration-green-500 hover:text-green-500 font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-green-500 justify-center items-center flex"
+          >
+            <img src="./signup.gif" className="mr-2" />
+            Login
+          </button>
         </Form>
       </Formik>
-      <div>
-        {console.log(Loginerror)}
-        {Loginerror ? "UserName/Password is wrong" : ""}
-      </div>
     </div>
   );
 };
