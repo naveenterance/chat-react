@@ -6,7 +6,7 @@ import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import Search from "./Search";
 import Home from "./Home";
-import MessageViewer from "./MessageViewer";
+
 import MessageList from "./MessageList";
 
 // QueryClient wrapping start
@@ -53,24 +53,6 @@ const ProfileComponent = () => {
   }, [client]);
 
   const claims = jose.decodeJwt(token);
-
-  // Function to refresh queries start
-  // const refreshQueries = () => {
-  //   queryClient.invalidateQueries("myData");
-  //   queryClient.invalidateQueries("myContacts");
-  // };
-  // // Function to refresh queries end
-
-  // // Fetch data every 5 seconds
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     refreshQueries();
-  //   }, 5000);
-
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
 
   //chat log fetch start
   const { data, isLoading, isError, error } = useQuery(
@@ -199,10 +181,18 @@ const ProfileComponent = () => {
   //seen
 
   //seen
+
+  const handleSelectMessageSender = (sender) => {
+    select(sender);
+  };
+
   return (
     <>
       <div className="flex">
-        <MessageList user={claims.name} />
+        <MessageList
+          user={claims.name}
+          onSelectMessageSender={handleSelectMessageSender}
+        />
 
         {!receiver ? (
           <div>
