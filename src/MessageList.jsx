@@ -39,11 +39,11 @@ const MessageList = ({ user, onSelectMessageSender }) => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Messages for {user}</h2>
-      <ul className="list-disc pl-4">
+      <div className="list-disc ">
         {messages.map(
           (message) =>
             message.message !== "[Added as a contact]" && (
-              <li
+              <div
                 key={message._id}
                 className="mb-4"
                 onClick={() =>
@@ -54,31 +54,46 @@ const MessageList = ({ user, onSelectMessageSender }) => {
                   )
                 }
               >
-                <div className="bg-gray-100 p-4 border rounded-md">
-                  <p className="text-blue-800 font-bold">
-                    <span className="font-semibold">Sender:</span>{" "}
-                    {message.sender}
-                  </p>
+                {message.sender != claims.name && (
+                  <div
+                    className={`p-4 border  ${
+                      message.sender !== claims.name
+                        ? "rounded-r-full lg:mr-48 mr-16"
+                        : "rounded-l-full lg:ml-48 ml-16"
+                    } w-5/6
+                  ${message.view == "notSeen" ? "border-error" : ""}`}
+                  >
+                    <p className=" font-bold">
+                      <span className="font-semibold">Sender:</span>{" "}
+                      {message.sender == claims.name ? "you" : message.sender}
+                    </p>
 
-                  <p className="text-green-600">
-                    <span className="font-semibold">Receiver:</span>
-                    {message.receiver}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-semibold">Message:</span>
-                    {message.message}
-                  </p>
-                  <p className="text-gray-500">
-                    <span className="font-semibold">Date:</span> {message.date}
-                  </p>
-                  <p className="text-purple-600">
-                    <span className="font-semibold">View:</span> {message.view}
-                  </p>
-                </div>
-              </li>
+                    <p className="">
+                      <span className="font-semibold">Receiver:</span>
+                      {message.receiver == claims.name
+                        ? "you"
+                        : message.receiver}
+                    </p>
+                    <p className="">
+                      <span className="font-semibold">Message:</span>
+                      {message.message.length > 20
+                        ? `${message.message.slice(0, 10)}...`
+                        : message.message}
+                    </p>
+                    <p className="">
+                      <span className="font-semibold">Date:</span>{" "}
+                      {message.date}
+                    </p>
+                    <p className="">
+                      <span className="font-semibold">View:</span>{" "}
+                      {message.view}
+                    </p>
+                  </div>
+                )}
+              </div>
             )
         )}
-      </ul>
+      </div>
     </div>
   );
 };

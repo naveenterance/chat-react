@@ -65,7 +65,7 @@ const Login = () => {
           <div className="mb-6">
             <label
               htmlFor="name"
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-base-content text-sm font-bold mb-2"
             >
               Name
             </label>
@@ -73,7 +73,7 @@ const Login = () => {
               type="text"
               id="name"
               name="name"
-              className="bg-slate-200  w-full px-3 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
+              className="bg-slate-200  w-full px-3 py-2 border rounded-md focus:outline-none focus:border-success"
             />
             <div className="text-red-500">
               <ErrorMessage name="name" />
@@ -83,7 +83,7 @@ const Login = () => {
           <div className="mb-6">
             <label
               htmlFor="password"
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-base-content text-sm font-bold mb-2"
             >
               Password
             </label>
@@ -91,7 +91,7 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
-              className="bg-slate-200  w-full px-3 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
+              className="bg-slate-200  w-full px-3 py-2 border rounded-md focus:outline-none focus:border-success"
             />
             <div className="text-red-500">
               <ErrorMessage name="password" />
@@ -104,7 +104,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className=" hover:underline hover:decoration-green-500 hover:text-green-500 font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-green-500 justify-center items-center flex"
+            className=" hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-success justify-center items-center flex"
           >
             <img src="./signup.gif" className="mr-2" />
             Login

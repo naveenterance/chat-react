@@ -54,7 +54,7 @@ const Search = ({ onValueChange }) => {
     <>
       <div className="App">
         <header className="App-header">
-          <div style={{ width: 400 }}>
+          <div style={{ width: 300 }}>
             <ReactSearchAutocomplete
               items={users}
               onSearch={handleOnSearch}
@@ -64,6 +64,7 @@ const Search = ({ onValueChange }) => {
               autoFocus
               formatResult={formatResult}
               autoHighlight={false}
+              placeholder="Find new contacts"
             />
           </div>
         </header>
