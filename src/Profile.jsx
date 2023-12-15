@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
-import Search from "./Sesarch";
+import Search from "./Search";
 import Home from "./Home";
 
 import MessageList from "./MessageList";
