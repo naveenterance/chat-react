@@ -14,29 +14,11 @@ export default function Appold() {
 }
 
 const fetchData = async () => {
-  const response = await fetch("http://localhost:4000/log");
+  const response = await fetch("https://chat-log-naveenterances-projects.vercel.app/log");
   const data = await response.json();
   return data;
 };
 
-const MyComponent = () => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:3000/users/655e10baecfde75cbb7394ca"
-        ); // Replace with the actual API endpoint and user ID
-        const data = await response.json();
-        setUser(data);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   const { isLoading, isError, data, error } = useQuery("myData", fetchData);
 
@@ -49,7 +31,7 @@ const MyComponent = () => {
   }
   const add = async (values) => {
     try {
-      const response = await fetch("http://localhost:4000/log", {
+      const response = await fetch("https://chat-log-naveenterances-projects.vercel.app/log", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -60,7 +60,9 @@ const ProfileComponent = () => {
   const { data, isLoading, isError, error } = useQuery(
     "myData",
     async () => {
-      const response = await fetch(`http://localhost:4000/log/${claims.name}`);
+      const response = await fetch(
+        `https://chat-log-naveenterances-projects.vercel.app/log/${claims.name}`
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch data");
@@ -84,7 +86,7 @@ const ProfileComponent = () => {
     "myContacts",
     async () => {
       const response = await fetch(
-        `http://localhost:4000/contacts/${claims.name}`
+        `https://chat-log-naveenterances-projects.vercel.app/contacts/${claims.name}`
       );
 
       if (!response.ok) {
@@ -121,13 +123,16 @@ const ProfileComponent = () => {
       // Disable the button immediately upon submission
       setButtonDisabled(true);
 
-      const response = await fetch("http://localhost:4000/log", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        "https://chat-log-naveenterances-projects.vercel.app/log",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
 
       if (response.ok) {
         console.log("Value posted to the API successfully!");
@@ -143,7 +148,7 @@ const ProfileComponent = () => {
       // Enable the button after 3 seconds, regardless of success or failure
       setTimeout(() => {
         setButtonDisabled(false);
-      }, 8000);
+      }, 5000);
     }
   };
   //sent message end
@@ -151,7 +156,7 @@ const ProfileComponent = () => {
   const deleteContact = async (receiver) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/contacts/${claims.name}/${receiver}`,
+        `https://chat-log-naveenterances-projects.vercel.app/contacts/${claims.name}/${receiver}`,
         {
           method: "DELETE",
         }
@@ -170,7 +175,7 @@ const ProfileComponent = () => {
     // Enable the button after 3 seconds
     setTimeout(() => {
       setButtonDisabled(false);
-    }, 3000);
+    }, 5000);
   };
   //delete contact end
 
@@ -178,7 +183,7 @@ const ProfileComponent = () => {
   const handleUpdateView = async (sender, receiver) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/updateView/${sender}/${receiver}`,
+        `https://chat-log-naveenterances-projects.vercel.app/updateView/${sender}/${receiver}`,
         {
           method: "PUT",
         }
@@ -309,15 +314,18 @@ const ProfileComponent = () => {
           />
         )}
         {!receiver && currenttab == "contacts" && (
-          <div className="p-4 ">
-            <div className="w-1/2 p-4 ">
-              <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-36 flex  animate__animated animate__fadeInDown ">
+          <div className="">
+            <div className="">
+              <Search onValueChange={handleSelectedItem} />
+            </div>
+            <div className="w-36 p-4 ">
+              <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-full flex  animate__animated animate__fadeInDown mt-12 ">
                 <img
                   className="w-24 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
                   src={`https://robohash.org/${claims.name}?set=set3`}
                   alt="loading.."
                 />
-                <h1 className="text-4xl rounded-full px-4  font-bold mb-4 ml-4  border-4 border-transparent border-x-info">
+                <h1 className="text-xl rounded-full px-4  font-bold mb-4 ml-4  border-4 border-transparent border-x-info">
                   {claims.name}
                 </h1>
                 <button
@@ -342,8 +350,7 @@ const ProfileComponent = () => {
                 </button>
               </div>
 
-              <div className="mt-4 animate__animated animate__fadeInDown">
-                <Search onValueChange={handleSelectedItem} />
+              <div className="mt-4 animate__animated animate__fadeInDown  z-50">
                 {selectedItem && (
                   <Formik
                     initialValues={{
@@ -386,33 +393,33 @@ const ProfileComponent = () => {
                 )}
               </div>
             </div>
-            <div className="w-full p-1 mt-4  animate__animated animate__fadeInUp">
+            <div className="w-full p-1 mt-4  animate__animated animate__fadeInUp -z-50">
               <div className="mb-4">
                 <p className="text-lg">CONTACTS</p>
                 {cisLoading ? (
                   <p>Loading...</p>
                 ) : cisError ? (
-                  <p className="text-red-500">Error: {cerror.message}</p>
+                  <p className="text-error">Error: {cerror.message}</p>
                 ) : (
                   <div>
                     {receivers &&
                     receivers.receivers &&
                     receivers.receivers.length > 0 ? (
-                      <div>
+                      <div class="grid lg:grid-cols-4 gap-4">
                         {receivers.receivers.map((receiver) => (
                           <div
                             key={receiver}
                             className="flex justify-between items-center mt-2 rounded-full px-2  font-bold mb-4   border-4 border-transparent border-x-info"
                           >
                             <img
-                              className="w-12"
+                              className="w-12 hover:border-4 rounded-full border-dashed"
                               src={`https://robohash.org/${receiver}?set=set3`}
-                              alt="loading"
+                              alt=""
                             />
 
                             <button
                               onClick={() => select(receiver)}
-                              className=" flex"
+                              className=" flex hover:underline hover:text-success hover:decoration-4 hover:text-bold hover:text-xl"
                             >
                               {receiver}
                               <svg
@@ -445,7 +452,7 @@ const ProfileComponent = () => {
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 stroke="currentColor"
-                                className="w-6 h-6 text-error"
+                                className="w-6 h-6 text-error hover:w-8 hover:h-8 "
                               >
                                 <path
                                   strokeLinecap="round"

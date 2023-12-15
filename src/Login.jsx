@@ -51,23 +51,26 @@ const Login = () => {
 
   const login = async (values) => {
     try {
-      const response = await fetch("http://localhost:3000/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
-          "Access-Control-Allow-Headers":
-            "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
-        },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        "https://chat-node-naveenterances-projects.vercel.app/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+            "Access-Control-Allow-Headers":
+              "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+          },
+          body: JSON.stringify(values),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         console.log("logged in");
         localStorage.setItem("token", data.token);
-        console.log(data);
+
         navigate("/Profile");
         try {
           jwt.verify(token, "your-secret-key");
@@ -104,7 +107,7 @@ const Login = () => {
               type="text"
               id="name"
               name="name"
-              className="  w-full px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success "
+              className="  w-full focus:bg-base-100  px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success "
             />
             <div className="text-error">
               <ErrorMessage name="name" />
@@ -119,7 +122,7 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
-              className=" w-full px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success  "
+              className=" w-full focus:bg-base-100 px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success  "
             />
             <div className="text-error">
               <ErrorMessage name="password" />

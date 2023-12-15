@@ -11,7 +11,9 @@ const MessageList = ({ user, onSelectMessageSender }) => {
   } = useQuery(
     ["messages", user],
     async () => {
-      const response = await fetch(`http://localhost:4000/messages/${user}`);
+      const response = await fetch(
+        `https://chat-log-naveenterances-projects.vercel.app/messages/${user}`
+      );
       const data = await response.json();
 
       if (!response.ok) {
