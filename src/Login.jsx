@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [Loginerror, setLoginerror] = useState(false);
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
 
   const navigate = useNavigate();
 
@@ -51,6 +52,7 @@ const Login = () => {
 
   const login = async (values) => {
     try {
+      setButtonDisabled(true);
       const response = await fetch(
         "https://chat-node-naveenterances-projects.vercel.app/users/login",
         {
@@ -85,6 +87,10 @@ const Login = () => {
     } catch (error) {
       console.error("Failed to login value to the API:", error);
       setLoginerror(true);
+    } finally {
+      setTimeout(() => {
+        setButtonDisabled(false);
+      }, 5000);
     }
   };
   return (
@@ -154,10 +160,17 @@ const Login = () => {
 
           <button
             type="submit"
+            disabled={isButtonDisabled}
             className=" hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-success justify-center items-center flex"
           >
-            <img src="./signup.gif" className="mr-2" />
-            Login
+            {!isButtonDisabled ? (
+              <>
+                <img src="./signup.gif" className="mr-2" />
+                Login
+              </>
+            ) : (
+              <span className="loading loading-dots loading-md"></span>
+            )}
           </button>
         </Form>
       </Formik>
