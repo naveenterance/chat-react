@@ -113,7 +113,7 @@ const Login = () => {
               type="text"
               id="name"
               name="name"
-              className="  w-full focus:bg-base-100  px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success "
+              className="  w-full transition-all duration-300 bg-base-100  px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success "
             />
             <div className="text-error">
               <ErrorMessage name="name" />
@@ -128,7 +128,7 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
-              className=" w-full focus:bg-base-100 px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success  "
+              className=" w-full transition-all duration-300 bg-base-100 px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success  "
             />
             <div className="text-error">
               <ErrorMessage name="password" />

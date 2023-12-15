@@ -266,7 +266,7 @@ const Signup = () => {
               type="text"
               id="name"
               name="name"
-              className="mt-1 p-2 border-4 border-transparent border-b-success rounded-md  focus:outline-none focus:border-success bg-base-100"
+              className="mt-1 p-2 border-4 transition-all duration-300  border-transparent border-b-success rounded-md  focus:outline-none focus:border-success bg-base-100"
             />
             <div className="text-error">
               <ErrorMessage name="name" />
@@ -281,7 +281,7 @@ const Signup = () => {
               type="password"
               id="password"
               name="password"
-              className="mt-1 p-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success bg-base-100"
+              className="mt-1 p-2  transition-all duration-300  border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success bg-base-100"
             />
             <div className="text-error">
               <ErrorMessage name="password" />
@@ -296,7 +296,7 @@ const Signup = () => {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              className="mt-1 p-2 border-4 border-transparent border-b-success  rounded-md  focus:outline-none focus:border-success bg-base-100"
+              className="transition-all duration-300  mt-1 p-2 border-4 border-transparent border-b-success  rounded-md  focus:outline-none focus:border-success bg-base-100"
             />
 
             <ErrorMessage name="confirmPassword" />
