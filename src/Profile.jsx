@@ -211,7 +211,7 @@ const ProfileComponent = () => {
 
   return (
     <>
-      <div className="navbar bg-base-100 sticky top-0  z-10 ">
+      <div className="navbar bg-base-100 sticky top-0  z-10 shadow-lg ">
         <a
           className={
             !receiver
@@ -275,7 +275,7 @@ const ProfileComponent = () => {
         </a>
         <a
           className={
-            currenttab !== "contacts"
+            currenttab !== "contacts" || receiver
               ? "animate__animated animate__fadeInDown hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-success justify-center items-center flex"
               : "animate__animated animate__fadeInDown underline decoration-success text-success font-semibold decoration-4 group w-40 h-24 rounded-full border-4 border-transparent border-x-success justify-center items-center flex"
           }
@@ -539,12 +539,16 @@ const ProfileComponent = () => {
                     (item.sender === receiver || item.receiver === receiver) ? (
                       <>
                         {item.sender === claims.name ? (
-                          <div className="chat chat-end">
-                            <div className="chat-bubble">{item.message}</div>
+                          <div className="chat chat-end ">
+                            <div className="chat-bubble  bg-blue-700">
+                              {item.message}
+                            </div>
                           </div>
                         ) : (
                           <div className="chat chat-start">
-                            <div className="chat-bubble">{item.message}</div>
+                            <div className="chat-bubble bg-green-700">
+                              {item.message}
+                            </div>
                           </div>
                         )}
                       </>
@@ -569,7 +573,7 @@ const ProfileComponent = () => {
                     type="text"
                     id="message"
                     name="message"
-                    className="w-3/4 border bg-transparent rounded-full p-2  m-4"
+                    className="w-3/4 border-4 border-base-content bg-transparent shadow-lg  rounded-full p-2  m-4"
                     placeholder={`>${receiver}`}
                   />
 

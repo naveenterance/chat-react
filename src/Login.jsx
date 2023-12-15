@@ -11,8 +11,42 @@ const Login = () => {
   const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    password: Yup.string().required("Password is required"),
+    name: Yup.string().required(
+      <div role="alert" className="alert alert-error mt-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="stroke-current shrink-0 h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span>UserName is required</span>
+      </div>
+    ),
+    password: Yup.string().required(
+      <div role="alert" className="alert alert-error mt-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="stroke-current shrink-0 h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span>Password is required</span>
+      </div>
+    ),
   });
 
   const login = async (values) => {
@@ -51,7 +85,7 @@ const Login = () => {
     }
   };
   return (
-    <div>
+    <div className="">
       <Formik
         initialValues={{
           // Initialize your form fields here
@@ -63,43 +97,56 @@ const Login = () => {
       >
         <Form className="max-w-md mx-auto animate__animated animate__bounceIn">
           <div className="mb-6">
-            <label
-              htmlFor="name"
-              className="block text-base-content text-sm font-bold mb-2"
-            >
+            <label htmlFor="name" className="block text-sm font-bold mb-2">
               Name
             </label>
             <Field
               type="text"
               id="name"
               name="name"
-              className="bg-slate-200  w-full px-3 py-2 border rounded-md focus:outline-none focus:border-success"
+              className="  w-full px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success "
             />
-            <div className="text-red-500">
+            <div className="text-error">
               <ErrorMessage name="name" />
             </div>
           </div>
 
           <div className="mb-6">
-            <label
-              htmlFor="password"
-              className="block text-base-content text-sm font-bold mb-2"
-            >
+            <label htmlFor="password" className="block text-sm font-bold mb-2">
               Password
             </label>
             <Field
               type="password"
               id="password"
               name="password"
-              className="bg-slate-200  w-full px-3 py-2 border rounded-md focus:outline-none focus:border-success"
+              className=" w-full px-3 py-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success  "
             />
-            <div className="text-red-500">
+            <div className="text-error">
               <ErrorMessage name="password" />
             </div>
           </div>
-          <div className="text-red-600 text-bold">
+          <div className="text-error text-bold">
             {console.log(Loginerror)}
-            {Loginerror ? "[UserName/Password incorrect]" : ""}
+            {Loginerror ? (
+              <div role="alert" className="alert alert-error mt-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="stroke-current shrink-0 h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>UserName/Password incorrect</span>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
 
           <button

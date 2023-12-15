@@ -11,24 +11,115 @@ const Signup = () => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
-      .required("Username is required")
-      .test("user-exists", "Username not available", async function (value) {
-        if (value) {
-          const response = await fetch(`http://localhost:3000/users/${value}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const data = await response.json();
-          return !data.exists;
+      .required(
+        <div role="alert" className="alert alert-error mt-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="stroke-current shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>UserName is required</span>
+        </div>
+      )
+      .test(
+        "user-exists",
+        <div role="alert" className="alert alert-error mt-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="stroke-current shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span> User Name not available</span>
+        </div>,
+        async function (value) {
+          if (value) {
+            const response = await fetch(
+              `http://localhost:3000/users/${value}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            const data = await response.json();
+            return !data.exists;
+          }
+          return true;
         }
-        return true;
-      }),
-    password: Yup.string().required("Password is required"),
+      ),
+    password: Yup.string().required(
+      <div role="alert" className="alert alert-error mt-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="stroke-current shrink-0 h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span>Passwords is required</span>
+      </div>
+    ),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
-      .required("Password confirmation is required"),
+      .oneOf(
+        [Yup.ref("password"), null],
+        <div role="alert" className="alert alert-error mt-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="stroke-current shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>Passwords not matching</span>
+        </div>
+      )
+      .required(
+        <div role="alert" className="alert alert-error mt-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="stroke-current shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>Password confirmation in required</span>
+        </div>
+      ),
   });
 
   const addMutation = useMutation(
@@ -82,9 +173,9 @@ const Signup = () => {
             type="text"
             id="name"
             name="name"
-            className="mt-1 p-2 border rounded-md bg-slate-200  focus:outline-none focus:border-success"
+            className="mt-1 p-2 border-4 border-transparent border-b-success rounded-md  focus:outline-none focus:border-success bg-base-100"
           />
-          <div className="text-red-500">
+          <div className="text-error">
             <ErrorMessage name="name" />
           </div>
         </div>
@@ -97,9 +188,9 @@ const Signup = () => {
             type="password"
             id="password"
             name="password"
-            className="mt-1 p-2 border rounded-md bg-slate-200 focus:outline-none focus:border-success"
+            className="mt-1 p-2 border-4 border-transparent border-b-success rounded-md focus:outline-none focus:border-success bg-base-100"
           />
-          <div className="text-red-500">
+          <div className="text-error">
             <ErrorMessage name="password" />
           </div>
         </div>
@@ -112,16 +203,15 @@ const Signup = () => {
             type="password"
             id="confirmPassword"
             name="confirmPassword"
-            className="mt-1 p-2 border rounded-md bg-slate-200  focus:outline-none focus:border-success"
+            className="mt-1 p-2 border-4 border-transparent border-b-success  rounded-md  focus:outline-none focus:border-success bg-base-100"
           />
-          <div className="text-red-500">
-            <ErrorMessage name="confirmPassword" />
-          </div>
+
+          <ErrorMessage name="confirmPassword" />
         </div>
 
         <button
           type="submit"
-          className=" hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-success justify-center items-center flex"
+          className=" hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent border-transparent hover:border-x-success justify-center items-center flex"
         >
           <img src="./signup.gif" className="mr-2" />
           Sign up

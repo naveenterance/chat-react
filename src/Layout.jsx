@@ -4,15 +4,15 @@ import { Outlet, Link } from "react-router-dom";
 
 const Layout = () => {
   const [theme, setTheme] = useState(
-    localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
+    localStorage.getItem("theme") ? localStorage.getItem("theme") : "night"
   );
 
   // update state on toggle
   const handleToggle = (e) => {
     if (e.target.checked) {
-      setTheme("dark");
+      setTheme("night");
     } else {
-      setTheme("light");
+      setTheme("garden");
     }
   };
 
@@ -33,7 +33,7 @@ const Layout = () => {
               <input
                 type="checkbox"
                 onChange={handleToggle}
-                checked={theme === "light" ? false : true}
+                checked={theme === "garden" ? false : true}
               />
 
               <svg
@@ -51,7 +51,7 @@ const Layout = () => {
                 />
               </svg>
 
-              {/* dark theme moon image */}
+              {/* night theme moon image */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

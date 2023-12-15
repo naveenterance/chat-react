@@ -65,6 +65,7 @@ const Search = ({ onValueChange }) => {
               formatResult={formatResult}
               autoHighlight={false}
               placeholder="Find new contacts"
+              className="bg-base-100"
             />
           </div>
         </header>

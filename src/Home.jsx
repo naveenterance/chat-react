@@ -12,8 +12,8 @@ const Home = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="h-screen flex items-center justify-center bg-[url('/greenwave.svg')] bg-cover bg-center lg:bg-fixed font-sans  ">
-        <div className="grid grid-cols-2 rounded-lg   h-3/4  text-neutral">
+      <div className="h-screen flex items-center justify-center    ">
+        <div className="grid grid-cols-2 rounded-lg   h-3/4  ">
           <div
             className={
               view !== "login"

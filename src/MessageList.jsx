@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery } from "react-query";
-import Profile from "./Profile";
 import * as jose from "jose";
 
 const MessageList = ({ user, onSelectMessageSender }) => {
@@ -36,64 +35,120 @@ const MessageList = ({ user, onSelectMessageSender }) => {
 
   const token = localStorage.getItem("token");
   const claims = jose.decodeJwt(token);
-  return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Messages for {user}</h2>
-      <div className="list-disc ">
-        {messages.map(
-          (message) =>
-            message.message !== "[Added as a contact]" && (
-              <div
-                key={message._id}
-                className="mb-4"
-                onClick={() =>
-                  onSelectMessageSender(
-                    message.receiver != claims.name
-                      ? message.receiver
-                      : message.sender
-                  )
-                }
-              >
-                {message.sender != claims.name && (
-                  <div
-                    className={`p-4 border  ${
-                      message.sender !== claims.name
-                        ? "rounded-r-full lg:mr-48 mr-16"
-                        : "rounded-l-full lg:ml-48 ml-16"
-                    } w-5/6
-                  ${message.view == "notSeen" ? "border-error" : ""}`}
-                  >
-                    <p className=" font-bold">
-                      <span className="font-semibold">Sender:</span>{" "}
-                      {message.sender == claims.name ? "you" : message.sender}
-                    </p>
 
-                    <p className="">
-                      <span className="font-semibold">Receiver:</span>
-                      {message.receiver == claims.name
-                        ? "you"
-                        : message.receiver}
-                    </p>
-                    <p className="">
-                      <span className="font-semibold">Message:</span>
-                      {message.message.length > 20
-                        ? `${message.message.slice(0, 10)}...`
-                        : message.message}
-                    </p>
-                    <p className="">
-                      <span className="font-semibold">Date:</span>{" "}
-                      {message.date}
-                    </p>
-                    <p className="">
-                      <span className="font-semibold">View:</span>{" "}
-                      {message.view}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )
-        )}
-      </div>
+  const senderInfo = new Map();
+
+  messages.forEach((message) => {
+    if (
+      message.message === "[Added as a contact]" ||
+      message.sender === claims.name ||
+      message.view !== "notSeen"
+    ) {
+      return;
+    }
+
+    const sender = message.sender;
+
+    // Update sender information
+    senderInfo.set(sender, {
+      count: (senderInfo.get(sender)?.count || 0) + 1,
+      lastUnseenMessage: message,
+    });
+  });
+
+  return (
+    <div>
+      {senderInfo.size ? (
+        <div className="container mx-auto p-4">
+          <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-36 flex  ">
+            <img
+              className="w-16 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
+              src={`https://robohash.org/${claims.name}?set=set3`}
+              alt="loading.."
+            />
+            <h1 className="text-4xl rounded-full px-4  font-bold mb-4 ml-4  border-4 border-transparent border-x-info">
+              {claims.name}
+            </h1>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="table">
+              <tbody>
+                {[...senderInfo.entries()].map(([sender, info]) => (
+                  <tr
+                    key={sender}
+                    className="mb-4 border-4 border-transparent hover:border-x-error shadow-lg  "
+                    onClick={() => onSelectMessageSender(sender)}
+                  >
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <div className="avatar">
+                          <div className="mask mask-squircle w-12 h-12">
+                            <img
+                              src={`https://robohash.org/${sender}?set=set3`}
+                              alt="Avatar Tailwind CSS Component"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="font-bold">{sender}</div>
+                          <div className="badge badge-error gap-2 ">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6 m-2"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                              />
+                            </svg>
+                            <div className="font-bold">{info.count}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td>
+                      {" "}
+                      {info.lastUnseenMessage && (
+                        <div className="text-sm">
+                          {info.lastUnseenMessage.message}
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-36 flex  mt-4 ">
+            <img
+              className="w-16 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
+              src={`https://robohash.org/${claims.name}?set=set3`}
+              alt="loading.."
+            />
+            <h1 className="text-4xl rounded-full px-4  font-bold mb-4 ml-4  border-4 border-transparent border-x-info">
+              {claims.name}
+            </h1>
+          </div>
+          <div className="m-auto  text-2xl font-light flex p-8">
+            <img
+              width="100"
+              height="100"
+              src="https://img.icons8.com/clouds/100/clouds.png"
+              alt="clouds"
+            />
+            <div className="ml-4 italic">No new messages</div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
