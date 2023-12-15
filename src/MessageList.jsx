@@ -26,7 +26,25 @@ const MessageList = ({ user, onSelectMessageSender }) => {
   );
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <>
+        <div className="flex gap-4 items-center mt-4">
+          <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
+          <div className="flex flex-col gap-4">
+            <div className="skeleton h-4 w-20"></div>
+            <div className="skeleton h-4 w-28"></div>
+          </div>
+        </div>
+        <div className="mt-12 ">
+          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
+        </div>
+      </>
+    );
   }
 
   if (isError) {
@@ -42,7 +60,7 @@ const MessageList = ({ user, onSelectMessageSender }) => {
     if (
       message.message === "[Added as a contact]" ||
       message.sender === claims.name ||
-      message.view !== "notSeen"
+      message.view == "Seen"
     ) {
       return;
     }
@@ -59,10 +77,10 @@ const MessageList = ({ user, onSelectMessageSender }) => {
   return (
     <div>
       {senderInfo.size ? (
-        <div className="container mx-auto p-4">
-          <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-36 flex  ">
+        <div className="container mx-auto p-4 ">
+          <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-36 flex  animate__animated animate__fadeInDown">
             <img
-              className="w-16 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
+              className="w-24 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
               src={`https://robohash.org/${claims.name}?set=set3`}
               alt="loading.."
             />
@@ -70,7 +88,7 @@ const MessageList = ({ user, onSelectMessageSender }) => {
               {claims.name}
             </h1>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto animate__animated animate__fadeInUp">
             <table className="table">
               <tbody>
                 {[...senderInfo.entries()].map(([sender, info]) => (
@@ -128,9 +146,9 @@ const MessageList = ({ user, onSelectMessageSender }) => {
         </div>
       ) : (
         <>
-          <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-36 flex  mt-4 ">
+          <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-36 flex  mt-4 animate__animated animate__fadeInDown">
             <img
-              className="w-16 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
+              className="w-24 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
               src={`https://robohash.org/${claims.name}?set=set3`}
               alt="loading.."
             />
@@ -138,7 +156,7 @@ const MessageList = ({ user, onSelectMessageSender }) => {
               {claims.name}
             </h1>
           </div>
-          <div className="m-auto  text-2xl font-light flex p-8">
+          <div className="m-auto  text-2xl font-light flex p-8 animate__animated animate__fadeInUp">
             <img
               width="100"
               height="100"
