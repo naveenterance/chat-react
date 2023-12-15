@@ -269,7 +269,7 @@ const ProfileComponent = () => {
                 <img
                   className="mx-auto w-12 rounded-full  "
                   src={`https://robohash.org/${receiver}?set=set3`}
-                  alt="loading.."
+                  alt=""
                 />
                 <p className="font-bold underline  decoration-4  ">
                   {receiver}
@@ -449,7 +449,10 @@ const ProfileComponent = () => {
               <div className="mb-4">
                 <p className="text-lg">CONTACTS</p>
                 {cisLoading ? (
-                  <p>Loading...</p>
+                  <p>
+                    {" "}
+                    <span className="loading loading-dots loading-md"></span>
+                  </p>
                 ) : cisError ? (
                   <p className="text-error">Error: {cerror.message}</p>
                 ) : (
@@ -494,7 +497,7 @@ const ProfileComponent = () => {
                               className=""
                               onClick={() =>
                                 document
-                                  .getElementById("my_modal_3")
+                                  .getElementById(`my_modal_3_${receiver}`)
                                   .showModal()
                               }
                             >
@@ -513,7 +516,10 @@ const ProfileComponent = () => {
                                 />
                               </svg>
                             </button>
-                            <dialog id="my_modal_3" className="modal">
+                            <dialog
+                              id={`my_modal_3_${receiver}`}
+                              className="modal"
+                            >
                               <div className="modal-box">
                                 <form method="dialog">
                                   {/* if there is a button in form, it will close the modal */}
