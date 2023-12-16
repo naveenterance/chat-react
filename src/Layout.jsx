@@ -26,7 +26,7 @@ const Layout = () => {
 
   return (
     <>
-      <div className="w-8 absolute top-8 right-8 z-50">
+      <div className="w-8 absolute top-2 right-8 z-50">
         <div className="flex-none">
           <button className="btn btn-square btn-ghost">
             <label className="swap swap-rotate w-12 h-12">

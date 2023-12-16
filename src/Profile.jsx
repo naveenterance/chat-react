@@ -6,6 +6,7 @@ import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import Search from "./Search";
 import Home from "./Home";
+import Log from "./Log";
 
 import MessageList from "./MessageList";
 
@@ -28,7 +29,6 @@ const SignupSchema = Yup.object().shape({
 //Yup schema End
 
 const ProfileComponent = () => {
-  const [isLoggedOut, setLoggedOut] = useState(false);
   const [client, setclient] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -38,8 +38,8 @@ const ProfileComponent = () => {
   const [currenttab, setcurrenttab] = useState("messages");
 
   //token check start
-  if (token == null || isLoggedOut) {
-    console.log(token, isLoggedOut);
+  if (token == null) {
+    console.log(token);
 
     return <Home />;
   }
@@ -101,24 +101,9 @@ const ProfileComponent = () => {
   );
 
   //contacts fetch end
-  //logout function start
-  const Logout = () => {
-    try {
-      const storedToken = localStorage.getItem("token");
 
-      if (storedToken) {
-        localStorage.removeItem("token");
-      }
-
-      setLoggedOut(true);
-      navigate("/");
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-  //logout function end
   //sent message start
-  const add = async (values) => {
+  const add = async (values, { resetForm }) => {
     try {
       // Disable the button immediately upon submission
       setButtonDisabled(true);
@@ -149,6 +134,7 @@ const ProfileComponent = () => {
       setTimeout(() => {
         setButtonDisabled(false);
       }, 5000);
+      resetForm();
     }
   };
   //sent message end
@@ -202,13 +188,24 @@ const ProfileComponent = () => {
   const select = (receiver) => {
     setclient(receiver);
     setReceiver(receiver);
-    handleUpdateView(receiver, claims.name);
+
     console.log(client);
   };
   //setcient end
-  //seen
+  useEffect(() => {
+    // Define a function to handle the interval logic
+    const intervalHandler = () => {
+      handleUpdateView(receiver, claims.name);
+    };
 
-  //seen
+    // Set an interval to call the function every 5 seconds
+    const intervalId = setInterval(intervalHandler, 5000);
+
+    // Clear the interval when the component is unmounted
+    return () => clearInterval(intervalId);
+
+    // Dependency array includes receiver and claims.name to re-run the effect when they change
+  }, [receiver, claims.name]);
 
   const handleSelectMessageSender = (sender) => {
     select(sender);
@@ -216,13 +213,14 @@ const ProfileComponent = () => {
 
   return (
     <>
-      <div className="navbar bg-base-100 sticky top-0  z-10 shadow-lg ">
+      <div className="navbar bg-base-100 sticky top-0  z-10 shadow-lg justify-start  ">
+        <Log />
         <a
           className={
             !receiver
               ? currenttab !== "messages"
-                ? "animate__animated animate__fadeInDown hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-success justify-center items-center flex"
-                : "animate__animated animate__fadeInDown underline decoration-success text-success font-semibold decoration-4 group w-40 h-24 rounded-full border-4 border-transparent border-x-success justify-center items-center flex"
+                ? "animate__animated animate__fadeInDown mr-2 hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-24 h-12  justify-center items-center flex"
+                : "animate__animated animate__fadeInDown mr-2 underline decoration-success text-success font-semibold decoration-4 group w-24 h-12  justify-center items-center flex"
               : ""
           }
           onClick={() => {
@@ -249,7 +247,7 @@ const ProfileComponent = () => {
               Messages
             </div>
           ) : (
-            <div className="text-info hover:text-error border-4 border-info hover:border-error rounded-lg p-2  animate__animated animate__fadeInDown">
+            <div className="text-info hover:text-error border-4 border-info hover:border-error w-full rounded-lg p-2  animate__animated animate__fadeInDown">
               <button onClick={() => setReceiver("")} className="flex">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -278,35 +276,37 @@ const ProfileComponent = () => {
             </div>
           )}
         </a>
-        <a
-          className={
-            currenttab !== "contacts" || receiver
-              ? "animate__animated animate__fadeInDown hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-success justify-center items-center flex"
-              : "animate__animated animate__fadeInDown underline decoration-success text-success font-semibold decoration-4 group w-40 h-24 rounded-full border-4 border-transparent border-x-success justify-center items-center flex"
-          }
-          onClick={() => {
-            setcurrenttab("contacts");
-            setReceiver("");
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
+        {!receiver && (
+          <a
+            className={
+              currenttab !== "contacts" || receiver
+                ? "animate__animated animate__fadeInDown  hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-24 h-12  justify-center items-center flex"
+                : "animate__animated animate__fadeInDown underline decoration-success text-success font-semibold decoration-4 group w-24 h-12  justify-center items-center flex"
+            }
+            onClick={() => {
+              setcurrenttab("contacts");
+              setReceiver("");
+            }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
-            />
-          </svg>
-          Contacts
-        </a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
+              />
+            </svg>
+            Contacts
+          </a>
+        )}
       </div>
-      <div className="">
+      <div className=" ">
         {!receiver && currenttab == "messages" && (
           <MessageList
             user={claims.name}
@@ -316,92 +316,9 @@ const ProfileComponent = () => {
         {!receiver && currenttab == "contacts" && (
           <div className="">
             <div className="">
-              <Search onValueChange={handleSelectedItem} />
+              {/* <Search onValueChange={handleSelectedItem} /> */}
             </div>
             <div className="w-36 p-4 ">
-              <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-full flex  animate__animated animate__fadeInDown mt-12 ">
-                <img
-                  className="w-24 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
-                  src={`https://robohash.org/${claims.name}?set=set3`}
-                  alt="loading.."
-                />
-                <h1 className="text-xl rounded-full px-4  font-bold mb-4 ml-4  border-4 border-transparent border-x-info">
-                  {claims.name}
-                </h1>
-                <button
-                  onClick={() =>
-                    document.getElementById("my_modal_4").showModal()
-                  }
-                  className="rounded-full px-4 border-4 border-transparent  border-y-info border-r-error hover:border-y-error hover:border-r-info "
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6 text-error"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
-                    />
-                  </svg>
-                  <div className="text-error font-bold">Logout</div>
-                </button>
-              </div>
-              <dialog id="my_modal_4" className="modal">
-                <div className="modal-box">
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
-                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6 hover:text-error "
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </button>
-                  </form>
-                  <h3 className="font-bold text-lg"></h3>
-                  <p className="py-4 text-error text-3xl font-bold">Logout ?</p>
-
-                  <button
-                    onClick={Logout}
-                    className="btn mt-2 btn-circle w-full  right-0 text-success"
-                    disabled={isButtonDisabled}
-                  >
-                    {!isButtonDisabled ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    ) : (
-                      <span className="loading loading-dots loading-md"></span>
-                    )}
-                  </button>
-                </div>
-              </dialog>
-
               <div className="mt-4 animate__animated animate__fadeInDown  z-50">
                 {selectedItem && (
                   <Formik
@@ -447,7 +364,6 @@ const ProfileComponent = () => {
             </div>
             <div className="w-full p-1 mt-4  animate__animated animate__fadeInUp -z-50">
               <div className="mb-4">
-                <p className="text-lg">CONTACTS</p>
                 {cisLoading ? (
                   <p>
                     {" "}
@@ -595,7 +511,7 @@ const ProfileComponent = () => {
         )}
 
         {receiver && (
-          <div className="mt-4 -z-50">
+          <div className="mt-4  ">
             {receivers.receivers
               .map((receiver) => receiver)
               .includes(receiver) ? (
@@ -700,8 +616,8 @@ const ProfileComponent = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="chat chat-start flex flex-col p-4 animate__animated animate__fadeInLeft">
-                            <div className="chat-bubble bg-green-700 flex-grow">
+                          <div className="chat chat-end flex flex-col p-4 animate__animated animate__fadeInRight">
+                            <div className="chat-bubble bg-blue-700 flex-grow max-w-2/3 break-all">
                               {item.message}
                             </div>
                             <div className="flex justify-between items-end mt-2">
@@ -725,16 +641,19 @@ const ProfileComponent = () => {
               }}
               enableReinitialize={true}
               validationSchema={SignupSchema}
-              onSubmit={(values) => add(values)}
+              onSubmit={(values, { resetForm }) => add(values, { resetForm })}
             >
               {({ values }) => (
-                <Form className="mt-4 flex">
+                <Form
+                  className="flex w-full sticky bottom-0 bg-base-100"
+                  style={{ position: "fixed", bottom: 0, zIndex: 10 }}
+                >
                   <Field
                     type="text"
                     id="message"
                     name="message"
-                    className="w-3/4 border-4 border-base-content bg-transparent shadow-lg  rounded-full p-2  m-4"
-                    placeholder={`>${receiver}`}
+                    className=" w-3/4 border-4 border-base-content bg-base-100  shadow-lg rounded-full p-2 m-4 focus:outline-none focus:border-success"
+                    placeholder={` Say something to ${receiver}  `}
                   />
 
                   <button

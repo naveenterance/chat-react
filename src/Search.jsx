@@ -33,7 +33,6 @@ const Search = ({ onValueChange }) => {
 
   const handleOnSelect = (item) => {
     console.log(item);
-
     // Call the callback function from the parent with the selected item
     onValueChange(item);
   };
@@ -45,68 +44,53 @@ const Search = ({ onValueChange }) => {
   const formatResult = (user) => {
     return user.name !== claims.name ? (
       <>
-        <span id={user._id} className="hover:text-success">
+        <span
+          id={user._id}
+          className="hover:text-success flex items-center space-x-2"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 "
+            className="w-6 h-6"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
-            />
+            {/* Your SVG path here */}
           </svg>
-
-          {user.name}
+          <span>{user.name}</span>
         </span>
       </>
     ) : null;
   };
 
+  const inputStyles = {
+    width: "100%",
+    height: "100%",
+    fontSize: "1.6rem", // Adjust the font size as needed
+    border: "10px blue",
+    outline: "none",
+  };
+
   return (
-    <>
-      <div className="App">
-        <header className="App-header">
-          <div
-            style={{
-              width: "100%",
-              zIndex: 999,
-              position: "absolute ",
-              height: "60px",
-              border: "8px solid teal",
-              borderRadius: "24px",
-              backgroundColor: "white",
-              boxShadow: "rgba(32, 33, 36, 0.28) 0px 1px 6px 0px",
-              hoverBackgroundColor: "red",
-              color: "#212121",
-              fontSize: "56px",
-              fontFamily: "Arial",
-              iconColor: "grey",
-              lineColor: "rgb(232, 234, 237)",
-              placeholderColor: "grey",
-              clearIconMargin: "3px 14px 0 0",
-              searchIconMargin: "0 0 0 16px",
-            }}
-          >
-            <ReactSearchAutocomplete
-              items={users}
-              onSearch={handleOnSearch}
-              onHover={handleOnHover}
-              onSelect={handleOnSelect}
-              onFocus={handleOnFocus}
-              autoFocus
-              formatResult={formatResult}
-              autoHighlight={false}
-              placeholder="Find new contacts"
-            />
-          </div>
-        </header>
-      </div>
-    </>
+    <div className="App">
+      <header className="App-header">
+        <div className="w-full relative h-60 border-8 border-teal-500 rounded-3xl bg-white shadow-md hover:bg-red-500 text-gray-800 text-4xl font-bold p-4">
+          <ReactSearchAutocomplete
+            items={users}
+            onSearch={handleOnSearch}
+            onHover={handleOnHover}
+            onSelect={handleOnSelect}
+            onFocus={handleOnFocus}
+            autoFocus
+            formatResult={formatResult}
+            autoHighlight={false}
+            placeholder="Find new contacts"
+            inputProps={{ style: inputStyles }}
+          />
+        </div>
+      </header>
+    </div>
   );
 };
 

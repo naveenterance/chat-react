@@ -80,16 +80,6 @@ const MessageList = ({ user, onSelectMessageSender }) => {
     <div>
       {senderInfo.size ? (
         <div className="container mx-auto p-4 ">
-          <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-36 flex  animate__animated animate__fadeInDown">
-            <img
-              className="w-24 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
-              src={`https://robohash.org/${claims.name}?set=set3`}
-              alt="loading.."
-            />
-            <h1 className="text-4xl rounded-full px-4  font-bold mb-4 ml-4  border-4 border-transparent border-x-info">
-              {claims.name}
-            </h1>
-          </div>
           <div className="overflow-x-auto animate__animated animate__fadeInUp">
             <table className="table">
               <tbody>
@@ -148,16 +138,6 @@ const MessageList = ({ user, onSelectMessageSender }) => {
         </div>
       ) : (
         <>
-          <div className="rounded-full border-4 border-transparent border-l-warning border-y-info p-4 w-36 flex  mt-4 animate__animated animate__fadeInDown">
-            <img
-              className="w-24 rounded-full ring ring-warning ring-offset-warning ring-offset-2"
-              src={`https://robohash.org/${claims.name}?set=set3`}
-              alt="loading.."
-            />
-            <h1 className="text-4xl rounded-full px-4  font-bold mb-4 ml-4  border-4 border-transparent border-x-info">
-              {claims.name}
-            </h1>
-          </div>
           <div className="m-auto  text-2xl font-light flex p-8 animate__animated animate__fadeInUp">
             <img
               width="100"
