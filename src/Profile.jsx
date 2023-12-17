@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import * as jose from "jose";
 import { useNavigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
@@ -194,22 +194,34 @@ const ProfileComponent = () => {
   //setcient end
   useEffect(() => {
     // Define a function to handle the interval logic
-    const intervalHandler = () => {
-      handleUpdateView(receiver, claims.name);
-    };
+    if (receiver && receiver.length > 0) {
+      const intervalHandler = () => {
+        handleUpdateView(receiver, claims.name);
+      };
 
-    // Set an interval to call the function every 5 seconds
-    const intervalId = setInterval(intervalHandler, 5000);
+      // Set an interval to call the function every 5 seconds
+      const intervalId = setInterval(intervalHandler, 5000);
 
-    // Clear the interval when the component is unmounted
-    return () => clearInterval(intervalId);
-
+      // Clear the interval when the component is unmounted
+      return () => clearInterval(intervalId);
+    }
     // Dependency array includes receiver and claims.name to re-run the effect when they change
   }, [receiver, claims.name]);
 
   const handleSelectMessageSender = (sender) => {
     select(sender);
   };
+  const scrollContainerRef = useRef();
+
+  useLayoutEffect(() => {
+    // Scroll to the last item when data changes or component mounts
+    if (scrollContainerRef.current) {
+      const lastItem = scrollContainerRef.current.lastChild;
+      if (lastItem) {
+        lastItem.scrollIntoView({ behavior: "instant" });
+      }
+    }
+  }, [data, receiver]);
 
   return (
     <>
@@ -560,7 +572,10 @@ const ProfileComponent = () => {
             ) : isError ? (
               <p className="text-red-500">Error: {error.message}</p>
             ) : (
-              <div>
+              <div
+                ref={scrollContainerRef}
+                className="mb-24 overflow-x-hidden overflow-y-auto "
+              >
                 {data.map((item) => (
                   <div key={item._id} className="">
                     {item.message !== "[Added as a contact]" &&
@@ -616,7 +631,7 @@ const ProfileComponent = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="chat chat-end flex flex-col p-4 animate__animated animate__fadeInRight">
+                          <div className="chat chat-start flex flex-col p-4 animate__animated animate__fadeInRight">
                             <div className="chat-bubble bg-blue-700 flex-grow max-w-2/3 break-all">
                               {item.message}
                             </div>
