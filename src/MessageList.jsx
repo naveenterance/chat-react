@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import { useQuery } from "react-query";
 import * as jose from "jose";
 
@@ -8,6 +9,7 @@ const MessageList = ({ user, onSelectMessageSender }) => {
     isLoading,
     isError,
     error,
+    refetch,
   } = useQuery(
     ["messages", user],
     async () => {
@@ -23,7 +25,7 @@ const MessageList = ({ user, onSelectMessageSender }) => {
       return data.data;
     },
     {
-      refetchInterval: 5000,
+      refetchInterval: 1,
     }
   );
 

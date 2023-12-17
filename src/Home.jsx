@@ -48,17 +48,8 @@ const Home = () => {
           </div>
 
           <div className="col-span-2">
-            {view == "login" ? <Login /> : <Signup />}
+            {view == "login" ? <Login /> : <Signup setView={setView} />}
           </div>
-
-          {/* <div className=" animate__animated animate__fadeInRight    hover:underline hover:decoration-indigo-500 hover:text-indigo-500 text-3xl font-semibold hover:decoration-4 group ">
-            <img
-              src="https://img.icons8.com/isometric/50/about.png"
-              alt="Default Image"
-              className="w-50 h-50 "
-            />
-            About
-          </div> */}
         </div>
       </div>
     </QueryClientProvider>

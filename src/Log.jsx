@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import * as jose from "jose";
 import { useNavigate } from "react-router-dom";
+
 const Log = () => {
   const token = localStorage.getItem("token");
   const claims = jose.decodeJwt(token);
   const navigate = useNavigate();
 
-  //logout function start
+  // Logout function start
   const Logout = () => {
     try {
       const storedToken = localStorage.getItem("token");
@@ -20,24 +21,31 @@ const Log = () => {
       console.error("Error during logout:", error);
     }
   };
-  //logout function end
+  // Logout function end
+
   return (
     <>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <details>
-              <summary>
-                {" "}
+            <div className="dropdown dropdown-bottom hover:bg-transparent ">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost  rounded-full  hover:bg-transparent  "
+              >
                 <img
-                  className="w-8 rounded-full ring ring-success "
+                  className="mx-auto w-12 rounded-full border-4 border-l-error border-r-success  border-y-base-content hover:border-y-success   "
                   src={`https://robohash.org/${claims.name}?set=set3`}
-                  alt="loading.."
+                  alt=""
                 />
-              </summary>
-              <ul className="p-2 bg-base-100 rounded-t-none ">
+              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 bg-transparent w-full h-full   "
+              >
                 <li>
-                  <div className="rounded-full border-4 border-transparent border-l-warning border-y-primary border-r-success p-4 w-full flex  animate__animated animate__fadeInDown ">
+                  <div className="rounded-full bg-base-100  shadow-lg hover:bg-base-100  border-4 border-transparent border-l-warning border-y-primary border-r-success p-4 w-full flex  animate__animated animate__fadeInDown ">
                     <h1 className="text-xl rounded-full px-4  font-bold mb-4 ml-4  border-4 border-transparent border-x-info">
                       {claims.name}
                     </h1>
@@ -69,7 +77,7 @@ const Log = () => {
                   <a></a>
                 </li>
               </ul>
-            </details>
+            </div>
           </li>
         </ul>
       </div>

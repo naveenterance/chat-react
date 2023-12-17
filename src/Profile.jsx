@@ -71,7 +71,7 @@ const ProfileComponent = () => {
       return response.json();
     },
     {
-      refetchInterval: 5000,
+      refetchInterval: 100,
     }
   );
 
@@ -96,7 +96,7 @@ const ProfileComponent = () => {
       return response.json();
     },
     {
-      refetchInterval: 5000,
+      refetchInterval: 100,
     }
   );
 
@@ -231,8 +231,8 @@ const ProfileComponent = () => {
           className={
             !receiver
               ? currenttab !== "messages"
-                ? "animate__animated animate__fadeInDown mr-2 hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-24 h-12  justify-center items-center flex"
-                : "animate__animated animate__fadeInDown mr-2 underline decoration-success text-success font-semibold decoration-4 group w-24 h-12  justify-center items-center flex"
+                ? "animate__animated animate__fadeInDown mr-4 hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-24 h-12  justify-center items-center flex"
+                : "animate__animated animate__fadeInDown mr-4 underline decoration-success text-success font-semibold decoration-4 group w-24 h-12  justify-center items-center flex"
               : ""
           }
           onClick={() => {

@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Confetti from "react-confetti";
 
-const Signup = () => {
+const Signup = ({ setView }) => {
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const handleOnError = (error) => {
     console.error("An error occurred:", error);
@@ -163,13 +163,20 @@ const Signup = () => {
     }
   };
 
+  const handleCloseDialog = () => {
+    setView("login");
+  };
+
   return (
     <>
-      <dialog id="my_modal_3" className="modal">
+      <dialog id="my_modal_3" className="modal ">
         <Confetti width="3000" height="2000" />
         <div className="modal-box">
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            <button
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onClick={handleCloseDialog}
+            >
               ✕
             </button>
           </form>
@@ -229,7 +236,10 @@ const Signup = () => {
           </h3>
 
           <form method="dialog">
-            <button className="btn mt-2 btn-circle w-full  right-0 text-success">
+            <button
+              className="btn mt-2 btn-circle w-full  right-0 text-success "
+              onClick={handleCloseDialog}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
