@@ -200,13 +200,13 @@ const ProfileComponent = () => {
       };
 
       // Set an interval to call the function every 5 seconds
-      const intervalId = setInterval(intervalHandler, 5000);
+      const intervalId = setInterval(intervalHandler, 1000);
 
       // Clear the interval when the component is unmounted
       return () => clearInterval(intervalId);
     }
     // Dependency array includes receiver and claims.name to re-run the effect when they change
-  }, [receiver, claims.name]);
+  }, [receiver, claims.name, data]);
 
   const handleSelectMessageSender = (sender) => {
     select(sender);
