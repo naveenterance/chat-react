@@ -35,7 +35,7 @@ const Log = () => {
                 className="btn btn-ghost  rounded-full  hover:bg-transparent  "
               >
                 <img
-                  className="mx-auto w-12 rounded-full border-4 border-l-error border-r-success  border-y-base-content hover:border-y-success   "
+                  className=" w-12 rounded-full border-4 border-l-error border-r-success border-y-success   "
                   src={`https://robohash.org/${claims.name}?set=set3`}
                   alt=""
                 />

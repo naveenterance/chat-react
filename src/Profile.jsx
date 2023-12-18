@@ -7,8 +7,9 @@ import * as Yup from "yup";
 import Search from "./Search";
 import Home from "./Home";
 import Log from "./Log";
-
 import MessageList from "./MessageList";
+import Autocomplete from "./SearchContacts";
+import FindContacts from "./FindContacts";
 
 // QueryClient wrapping start
 const queryClient = new QueryClient();
@@ -329,9 +330,40 @@ const ProfileComponent = () => {
           <div className="">
             <div className="">
               {/* <Search onValueChange={handleSelectedItem} /> */}
+              <div className="drawer drawer-end">
+                <input
+                  id="my-drawer-4"
+                  type="checkbox"
+                  className="drawer-toggle"
+                />
+                <div className="drawer-content">
+                  {/* Page content here */}
+                  <label
+                    htmlFor="my-drawer-4"
+                    className="drawer-button btn btn-primary"
+                  >
+                    Open drawer
+                  </label>
+                </div>
+                <div className="drawer-side z-50  ">
+                  <label
+                    htmlFor="my-drawer-4"
+                    aria-label="close sidebar"
+                    className="drawer-overlay"
+                  ></label>
+
+                  <ul className="menu p-4 w-4/6 lg:w-2/6 h-full rounded-lg my-auto bg-base-200 text-base-content">
+                    {/* Sidebar content here */}
+
+                    <li>
+                      <Autocomplete />
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
             <div className="w-36 p-4 ">
-              <div className="mt-4 animate__animated animate__fadeInDown  z-50">
+              <div className="mt-4 animate__animated animate__fadeInDown  ">
                 {selectedItem && (
                   <Formik
                     initialValues={{
@@ -341,7 +373,9 @@ const ProfileComponent = () => {
                     }}
                     enableReinitialize={true}
                     validationSchema={SignupSchema}
-                    onSubmit={(values) => add(values)}
+                    onSubmit={(values, { resetForm }) =>
+                      add(values, { resetForm })
+                    }
                   >
                     <Form>
                       <div className="stat  w-auto shadow">
@@ -374,7 +408,7 @@ const ProfileComponent = () => {
                 )}
               </div>
             </div>
-            <div className="w-full p-1 mt-4  animate__animated animate__fadeInUp -z-50">
+            <div className="w-full p-1 mt-4  animate__animated animate__fadeInUp ">
               <div className="mb-4">
                 {cisLoading ? (
                   <p>
@@ -388,7 +422,7 @@ const ProfileComponent = () => {
                     {receivers &&
                     receivers.receivers &&
                     receivers.receivers.length > 0 ? (
-                      <div class="grid lg:grid-cols-4 gap-4">
+                      <div class="grid lg:grid-cols-4  gap-2">
                         {receivers.receivers.map((receiver) => (
                           <div
                             key={receiver}
@@ -539,7 +573,9 @@ const ProfileComponent = () => {
                   }}
                   enableReinitialize={true}
                   validationSchema={SignupSchema}
-                  onSubmit={(values) => add(values)}
+                  onSubmit={(values, { resetForm }) =>
+                    add(values, { resetForm })
+                  }
                 >
                   <Form>
                     <button
@@ -558,7 +594,7 @@ const ProfileComponent = () => {
               </p>
             )}
             {isLoading ? (
-              <p className="text-gray-500">
+              <p className="text-bg-content">
                 {" "}
                 <div className="mt-12 ">
                   <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
@@ -570,7 +606,7 @@ const ProfileComponent = () => {
                 </div>
               </p>
             ) : isError ? (
-              <p className="text-red-500">Error: {error.message}</p>
+              <p className="text-error">Error: {error.message}</p>
             ) : (
               <div
                 ref={scrollContainerRef}
@@ -583,14 +619,14 @@ const ProfileComponent = () => {
                       <>
                         {item.sender === claims.name ? (
                           <div className="chat chat-end flex flex-col p-4 animate__animated animate__fadeInRight">
-                            <div className="chat-bubble bg-blue-700 flex-grow ">
+                            <div className="chat-bubble bg-info flex-grow  text-white">
                               {item.message}
                             </div>
                             <div className="flex justify-between items-end mt-2">
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-bg-content">
                                 {item.date}
                               </div>
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-bg-content">
                                 {item.view == "Seen" ? (
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -631,12 +667,12 @@ const ProfileComponent = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="chat chat-start flex flex-col p-4 animate__animated animate__fadeInRight">
-                            <div className="chat-bubble bg-blue-700 flex-grow max-w-2/3 break-all">
+                          <div className="chat chat-start flex flex-col p-4 animate__animated animate__fadeInLeft">
+                            <div className="chat-bubble bg-success flex-grow max-w-2/3 break-all  text-white">
                               {item.message}
                             </div>
                             <div className="flex justify-between items-end mt-2">
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-base-content">
                                 {item.date}
                               </div>
                             </div>
@@ -667,7 +703,7 @@ const ProfileComponent = () => {
                     type="text"
                     id="message"
                     name="message"
-                    className=" w-3/4 border-4 border-base-content bg-base-100  shadow-lg rounded-full p-2 m-4 focus:outline-none focus:border-success"
+                    className=" caret-success w-3/4 border-4 border-base-content bg-base-100  shadow-lg rounded-full p-2 m-4 focus:outline-none focus:border-success"
                     placeholder={` Say something to ${receiver}  `}
                   />
 

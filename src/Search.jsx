@@ -46,7 +46,7 @@ const Search = ({ onValueChange }) => {
       <>
         <span
           id={user._id}
-          className="hover:text-success flex items-center space-x-2"
+          className="hover:text-success flex items-center space-x-2 bg-error"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -64,18 +64,15 @@ const Search = ({ onValueChange }) => {
     ) : null;
   };
 
-  const inputStyles = {
-    width: "100%",
-    height: "100%",
-    fontSize: "1.6rem", // Adjust the font size as needed
-    border: "10px blue",
-    outline: "none",
-  };
-
   return (
-    <div className="App">
+    <div className="App z-50">
       <header className="App-header">
-        <div className="w-full relative h-60 border-8 border-teal-500 rounded-3xl bg-white shadow-md hover:bg-red-500 text-gray-800 text-4xl font-bold p-4">
+        <div
+          style={{
+            width: 300,
+            zIndex: 9999, // Wrap the property in quotes
+          }}
+        >
           <ReactSearchAutocomplete
             items={users}
             onSearch={handleOnSearch}
@@ -86,7 +83,22 @@ const Search = ({ onValueChange }) => {
             formatResult={formatResult}
             autoHighlight={false}
             placeholder="Find new contacts"
-            inputProps={{ style: inputStyles }}
+            styling={{
+              height: "44px",
+              border: "4px solid #bdbdbd", // Adjust border color
+              borderRadius: "30px", // Use a smaller border radius
+              backgroundColor: "#0c4a6e",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Use a lighter shadow
+              hoverBackgroundColor: "teal", // Lighter background on hover
+              color: "white",
+              fontSize: "16px",
+              fontFamily: "Roboto, Arial, sans-serif", // Use Roboto font
+              // Adjust icon color
+              lineColor: "red", // Lighter line color
+              placeholderColor: "#757575",
+              clearIconMargin: "3px 14px 0 0",
+              searchIconMargin: "0 0 0 16px",
+            }}
           />
         </div>
       </header>
