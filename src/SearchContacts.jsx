@@ -7,6 +7,8 @@ const Autocomplete = () => {
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [names, setNames] = useState([]);
+  const [view, setView] = useState("contacts");
+
   const token = localStorage.getItem("token");
   const claims = jose.decodeJwt(token);
 
@@ -27,19 +29,16 @@ const Autocomplete = () => {
         const { receivers } = data2;
 
         // Set the names state with the latest data
-        const updatedNames = data1
-          .map((user) => user.name)
-          .filter((name) => !receivers.includes(name));
+        let updatedNames = [];
+        if (view === "global") {
+          updatedNames = data1
+            .map((user) => user.name)
+            .filter((name) => !receivers.includes(name));
+        } else {
+          updatedNames = receivers;
+        }
 
-        //const updatedNames =receivers;
         setNames(updatedNames);
-
-        // Move filtering logic here
-        const filteredSuggestions = updatedNames.filter((name) =>
-          name.toLowerCase().includes(query.toLowerCase())
-        );
-
-        setSuggestions(filteredSuggestions);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
       } finally {
@@ -52,7 +51,15 @@ const Autocomplete = () => {
     } else {
       setSuggestions([]);
     }
-  }, [inputValue, claims.name]);
+  }, [inputValue, view]);
+
+  useEffect(() => {
+    // Move filtering logic here
+    const filteredSuggestions = names.filter((name) =>
+      name.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    setSuggestions(filteredSuggestions);
+  }, [inputValue, names]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -65,8 +72,19 @@ const Autocomplete = () => {
     setShowSuggestions(false); // Hide suggestions after selection
   };
 
+  const handleview = () => {
+    if (view === "contacts") {
+      setView("global");
+    } else {
+      setView("contacts");
+    }
+  };
+
   return (
     <>
+      <button className="btn btn-outline btn-primary" onClick={handleview}>
+        Primary
+      </button>
       <div className="hover:bg-base-100">
         <div className="">
           <div>
