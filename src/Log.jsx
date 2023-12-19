@@ -28,7 +28,7 @@ const Log = () => {
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <div className="dropdown dropdown-bottom hover:bg-transparent ">
+            <div className="dropdown dropdown-left hover:bg-transparent ">
               <div
                 tabIndex={0}
                 role="button"
@@ -42,10 +42,15 @@ const Log = () => {
               </div>
               <ul
                 tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 bg-transparent w-full h-full   "
+                className="dropdown-content z-[1] menu p-2 bg-transparent w-full h-full    "
               >
                 <li>
-                  <div className="rounded-full bg-base-100  shadow-lg hover:bg-base-100  border-4 border-transparent border-l-warning border-y-primary border-r-success p-4 w-full flex  animate__animated animate__fadeInDown ">
+                  <div className="ml-24  rounded-full bg-base-100  shadow-lg hover:bg-base-100  border-4 border-transparent p-4 w-full flex  animate__animated animate__fadeInDown ">
+                    <img
+                      className=" w-12 rounded-full border-4 border-l-error border-r-success border-y-success   "
+                      src={`https://robohash.org/${claims.name}?set=set3`}
+                      alt=""
+                    />
                     <h1 className="text-xl rounded-full px-4  font-bold mb-4 ml-4  border-4 border-transparent border-x-info">
                       {claims.name}
                     </h1>
@@ -53,7 +58,7 @@ const Log = () => {
                       onClick={() =>
                         document.getElementById("my_modal_4").showModal()
                       }
-                      className="rounded-full px-4 border-4 border-transparent  border-y-info border-r-error hover:border-y-error hover:border-r-info "
+                      className="rounded-full px-4  "
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

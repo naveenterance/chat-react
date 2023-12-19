@@ -224,6 +224,10 @@ const ProfileComponent = () => {
     }
   }, [data, receiver]);
 
+  const receiveDataFromChild = (suggestion) => {
+    setReceiver(suggestion);
+  };
+
   return (
     <>
       <div className="navbar bg-base-100 sticky top-0  z-10 shadow-lg justify-start  ">
@@ -336,13 +340,28 @@ const ProfileComponent = () => {
                   type="checkbox"
                   className="drawer-toggle"
                 />
-                <div className="drawer-content">
+                <div className="drawer-content flex underline decoration-4 decoration-primary ">
                   {/* Page content here */}
                   <label
                     htmlFor="my-drawer-4"
-                    className="drawer-button btn btn-primary"
+                    className="drawer-button btn btn-ghost w-full"
                   >
-                    Open drawer
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      dataSlot="icon"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                      />
+                    </svg>
+                    Search
                   </label>
                 </div>
                 <div className="drawer-side z-50  ">
@@ -356,58 +375,13 @@ const ProfileComponent = () => {
                     {/* Sidebar content here */}
 
                     <li>
-                      <Autocomplete />
+                      <Autocomplete sendDataToParent={receiveDataFromChild} />
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
-            <div className="w-36 p-4 ">
-              <div className="mt-4 animate__animated animate__fadeInDown  ">
-                {selectedItem && (
-                  <Formik
-                    initialValues={{
-                      sender: claims.name,
-                      receiver: selectedItem ? selectedItem.name : "",
-                      message: "[Added as a contact]",
-                    }}
-                    enableReinitialize={true}
-                    validationSchema={SignupSchema}
-                    onSubmit={(values, { resetForm }) =>
-                      add(values, { resetForm })
-                    }
-                  >
-                    <Form>
-                      <div className="stat  w-auto shadow">
-                        <div className="stat-figure text-primary">
-                          <div className="avatar ">
-                            <div className="w-16 rounded-full ring ring-info ring-offset-base-100 ring-offset-2">
-                              <img src="https://robohash.org/$(selectedItem.name)?set=set3" />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="stat">
-                          <div className="stat-value ">{selectedItem.name}</div>
-                        </div>
-                        <div className="stat">
-                          <button
-                            type="submit"
-                            className="btn btn-outline btn-info w-36 flex"
-                            disabled={isButtonDisabled}
-                          >
-                            {!isButtonDisabled ? (
-                              "Add as a contact"
-                            ) : (
-                              <span className="loading loading-dots loading-md"></span>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </Form>
-                  </Formik>
-                )}
-              </div>
-            </div>
+
             <div className="w-full p-1 mt-4  animate__animated animate__fadeInUp ">
               <div className="mb-4">
                 {cisLoading ? (
@@ -586,7 +560,7 @@ const ProfileComponent = () => {
                       {!isButtonDisabled ? (
                         `ADD ${receiver} as contact?`
                       ) : (
-                        <span className="loading loading-dots loading-md"></span>
+                        <div className="font-bold text-success">ADDED</div>
                       )}
                     </button>
                   </Form>
