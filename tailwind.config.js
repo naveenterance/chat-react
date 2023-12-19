@@ -6,6 +6,6 @@ export default {
   },
   plugins: [require("daisyui")],
   daisyui: {
-    themes: ["dracula", "bumblebee"],
+    themes: ["dracula", "garden"],
   },
 };

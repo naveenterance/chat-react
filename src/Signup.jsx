@@ -16,7 +16,10 @@ const Signup = ({ setView }) => {
     name: Yup.string()
       .max(
         15,
-        <div role="alert" className="alert alert-error mt-2">
+        <div
+          role="alert"
+          className="alert alert-error mt-2 animate__animated animate__shakeX"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="stroke-current shrink-0 h-6 w-6"
@@ -34,7 +37,10 @@ const Signup = ({ setView }) => {
         </div>
       )
       .required(
-        <div role="alert" className="alert alert-error mt-2">
+        <div
+          role="alert"
+          className="alert alert-error mt-2 animate__animated animate__shakeX"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="stroke-current shrink-0 h-6 w-6"
@@ -53,7 +59,10 @@ const Signup = ({ setView }) => {
       )
       .test(
         "user-exists",
-        <div role="alert" className="alert alert-error mt-2">
+        <div
+          role="alert"
+          className="alert alert-error mt-2 animate__animated animate__shakeX"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="stroke-current shrink-0 h-6 w-6"
@@ -87,7 +96,10 @@ const Signup = ({ setView }) => {
         }
       ),
     password: Yup.string().required(
-      <div role="alert" className="alert alert-error mt-2">
+      <div
+        role="alert"
+        className="alert alert-error mt-2 animate__animated animate__shakeX"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="stroke-current shrink-0 h-6 w-6"
@@ -107,7 +119,10 @@ const Signup = ({ setView }) => {
     confirmPassword: Yup.string()
       .oneOf(
         [Yup.ref("password"), null],
-        <div role="alert" className="alert alert-error mt-2">
+        <div
+          role="alert"
+          className="alert alert-error mt-2 animate__animated animate__shakeX"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="stroke-current shrink-0 h-6 w-6"
@@ -125,7 +140,10 @@ const Signup = ({ setView }) => {
         </div>
       )
       .required(
-        <div role="alert" className="alert alert-error mt-2">
+        <div
+          role="alert"
+          className="alert alert-error mt-2 animate__animated animate__shakeX"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="stroke-current shrink-0 h-6 w-6"

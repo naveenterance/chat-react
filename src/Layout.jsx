@@ -4,12 +4,12 @@ import { Outlet, Link } from "react-router-dom";
 
 const Layout = () => {
   const [theme, setTheme] = useState(
-    localStorage.getItem("theme") ? localStorage.getItem("theme") : "dracula"
+    localStorage.getItem("theme") ? localStorage.getItem("theme") : "garden"
   );
 
   const handleToggle = (e) => {
     if (e.target.checked) {
-      setTheme("dracula");
+      setTheme("garden");
     } else {
       setTheme("bumblebee");
     }
@@ -49,7 +49,7 @@ const Layout = () => {
                 />
               </svg>
 
-              {/* dracula theme moon image */}
+              {/* garden theme moon image */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

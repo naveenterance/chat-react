@@ -14,7 +14,10 @@ const Login = () => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(
-      <div role="alert" className="alert alert-error mt-2">
+      <div
+        role="alert"
+        className="alert alert-error mt-2  animate__animated animate__shakeX"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="stroke-current shrink-0 h-6 w-6"
@@ -32,7 +35,10 @@ const Login = () => {
       </div>
     ),
     password: Yup.string().required(
-      <div role="alert" className="alert alert-error mt-2">
+      <div
+        role="alert"
+        className="alert alert-error mt-2 animate__animated animate__shakeX"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="stroke-current shrink-0 h-6 w-6"
@@ -183,7 +189,10 @@ const Login = () => {
           <div className="text-error text-bold">
             {console.log(Loginerror)}
             {Loginerror ? (
-              <div role="alert" className="alert alert-error mt-2">
+              <div
+                role="alert"
+                className="alert alert-error mt-2 animate__animated animate__shakeX"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="stroke-current shrink-0 h-6 w-6"
