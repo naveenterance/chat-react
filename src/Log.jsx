@@ -35,7 +35,7 @@ const Log = () => {
                 className="btn btn-ghost  rounded-full  hover:bg-transparent  "
               >
                 <img
-                  className=" w-12 rounded-full border-4 border-l-error border-r-success border-y-success   "
+                  className=" w-12 rounded-full border-4 border-l-primary border-r-secondary border-t-accent border-b-neutral   "
                   src={`https://robohash.org/${claims.name}?set=set3`}
                   alt=""
                 />
@@ -47,7 +47,7 @@ const Log = () => {
                 <li>
                   <div className="ml-24  rounded-full bg-base-100  shadow-lg hover:bg-base-100  border-4 border-transparent p-4 w-full flex  animate__animated animate__fadeInDown ">
                     <img
-                      className=" w-12 rounded-full border-4 border-l-error border-r-success border-y-success   "
+                      className=" w-12 rounded-full border-4 border-l-primary border-r-secondary border-t-accent border-b-neutral   "
                       src={`https://robohash.org/${claims.name}?set=set3`}
                       alt=""
                     />
@@ -58,7 +58,7 @@ const Log = () => {
                       onClick={() =>
                         document.getElementById("my_modal_4").showModal()
                       }
-                      className="rounded-full px-4  "
+                      className="rounded-full px-4  transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +112,7 @@ const Log = () => {
 
           <button
             onClick={Logout}
-            className="btn mt-2 btn-circle w-full  right-0 text-success"
+            className="btn mt-2 btn-circle w-full  right-0 text-error"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +120,7 @@ const Log = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-12 h-12"
             >
               <path
                 strokeLinecap="round"

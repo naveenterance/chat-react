@@ -9,7 +9,6 @@ import Home from "./Home";
 import Log from "./Log";
 import MessageList from "./MessageList";
 import Autocomplete from "./SearchContacts";
-import FindContacts from "./FindContacts";
 
 // QueryClient wrapping start
 const queryClient = new QueryClient();
@@ -37,6 +36,24 @@ const ProfileComponent = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [currenttab, setcurrenttab] = useState("messages");
+
+  useEffect(() => {
+    const disableBackButton = (event) => {
+      event.preventDefault();
+
+      // After 3 attempts, prevent going back
+      window.history.forward();
+    };
+
+    // Disable the back button
+    window.history.pushState(null, "", window.location.pathname);
+    window.onpopstate = disableBackButton;
+
+    return () => {
+      // Enable the back button when the component unmounts
+      window.onpopstate = null;
+    };
+  });
 
   //token check start
   if (token == null) {
@@ -264,15 +281,15 @@ const ProfileComponent = () => {
               Messages
             </div>
           ) : (
-            <div className="text-info hover:text-error border-4 border-info hover:border-error w-full rounded-lg p-2  animate__animated animate__fadeInDown">
-              <button onClick={() => setReceiver("")} className="flex">
+            <div className=" w-56 p-2  animate__animated animate__fadeInDown shadow-lg rounded-full hover:text-primary">
+              <button onClick={() => setReceiver("")} className="flex ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-8 h-8"
+                  className="w-8 h-8 mt-2"
                 >
                   <path
                     strokeLinecap="round"
@@ -286,7 +303,7 @@ const ProfileComponent = () => {
                   src={`https://robohash.org/${receiver}?set=set3`}
                   alt=""
                 />
-                <p className="font-bold underline  decoration-4  ">
+                <p className="font-bold underline  decoration-4  mt-2 ">
                   {receiver}
                 </p>
               </button>
@@ -333,18 +350,16 @@ const ProfileComponent = () => {
         {!receiver && currenttab == "contacts" && (
           <div className="">
             <div className="">
-              {/* <Search onValueChange={handleSelectedItem} /> */}
               <div className="drawer drawer-end">
                 <input
                   id="my-drawer-4"
                   type="checkbox"
                   className="drawer-toggle"
                 />
-                <div className="drawer-content flex underline decoration-4 decoration-primary ">
-                  {/* Page content here */}
+                <div className="drawer-content flex  mb-4  lg:w-48 m-2 ">
                   <label
                     htmlFor="my-drawer-4"
-                    className="drawer-button btn btn-ghost w-full"
+                    className="drawer-button btn btn-ghost w-full text-2xl hover:text-success"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -353,7 +368,7 @@ const ProfileComponent = () => {
                       strokeWidth={1.5}
                       stroke="currentColor"
                       dataSlot="icon"
-                      className="w-6 h-6"
+                      className="w-8 h-8"
                     >
                       <path
                         strokeLinecap="round"
@@ -361,7 +376,7 @@ const ProfileComponent = () => {
                         d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
                       />
                     </svg>
-                    Search
+                    <div>Search</div>
                   </label>
                 </div>
                 <div className="drawer-side z-50  ">
@@ -400,18 +415,17 @@ const ProfileComponent = () => {
                         {receivers.receivers.map((receiver) => (
                           <div
                             key={receiver}
-                            className="flex justify-between items-center mt-2 rounded-full px-2  font-bold mb-4   border-4 border-transparent border-x-info"
+                            className="flex justify-between items-center mt-2 rounded-full px-8  font-bold mb-4   shadow-lg"
                           >
-                            <img
-                              className="w-12 hover:border-4 rounded-full border-dashed"
-                              src={`https://robohash.org/${receiver}?set=set3`}
-                              alt=""
-                            />
-
                             <button
                               onClick={() => select(receiver)}
-                              className=" flex hover:underline hover:text-success hover:decoration-4 hover:text-bold hover:text-xl"
+                              className=" flex hover:underline hover:text-success hover:decoration-4 hover:text-bold hover:text-xl transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110"
                             >
+                              <img
+                                className="w-12  rounded-full  mr-2"
+                                src={`https://robohash.org/${receiver}?set=set3`}
+                                alt=""
+                              />
                               {receiver}
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -593,11 +607,11 @@ const ProfileComponent = () => {
                       <>
                         {item.sender === claims.name ? (
                           <div className="chat chat-end flex flex-col p-4 animate__animated animate__fadeInRight">
-                            <div className="chat-bubble bg-info flex-grow  text-white">
+                            <div className="chat-bubble bg-secondary flex-grow  text-white">
                               {item.message}
                             </div>
-                            <div className="flex justify-between items-end mt-2">
-                              <div className="text-sm text-bg-content">
+                            <div className="flex justify-between items-end mt-2 ">
+                              <div className="text-sm text-bg-content opacity-25">
                                 {item.date}
                               </div>
                               <div className="text-sm text-bg-content">
@@ -642,11 +656,11 @@ const ProfileComponent = () => {
                           </div>
                         ) : (
                           <div className="chat chat-start flex flex-col p-4 animate__animated animate__fadeInLeft">
-                            <div className="chat-bubble bg-success flex-grow max-w-2/3 break-all  text-white">
+                            <div className="chat-bubble bg-gray-900 flex-grow max-w-2/3 break-all ">
                               {item.message}
                             </div>
                             <div className="flex justify-between items-end mt-2">
-                              <div className="text-sm text-base-content">
+                              <div className="text-sm text-base-content opacity-25">
                                 {item.date}
                               </div>
                             </div>

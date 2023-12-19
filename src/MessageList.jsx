@@ -32,20 +32,14 @@ const MessageList = ({ user, onSelectMessageSender }) => {
   if (isLoading) {
     return (
       <>
-        <div className="flex gap-4 items-center mt-4">
-          <div className="skeleton w-16 h-16 rounded-full shrink-0"></div>
-          <div className="flex flex-col gap-4">
-            <div className="skeleton h-4 w-20"></div>
-            <div className="skeleton h-4 w-28"></div>
-          </div>
-        </div>
-        <div className="mt-12 ">
-          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
-          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
-          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
-          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
-          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
-          <div className="skeleton h-4 w-3/4 ml-2 mt-8"></div>
+        <div className="mt-12 justify-center items-center ">
+          <progress className="progress progress-primary w-full"></progress>
+          <div className="skeleton h-4 w-full ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-full ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-full ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-full ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-full ml-2 mt-8"></div>
+          <div className="skeleton h-4 w-full ml-2 mt-8"></div>
         </div>
       </>
     );
@@ -128,7 +122,10 @@ const MessageList = ({ user, onSelectMessageSender }) => {
                       {" "}
                       {info.lastUnseenMessage && (
                         <div className="text-sm">
-                          {info.lastUnseenMessage.message}
+                          {info.lastUnseenMessage.message.length <= 10
+                            ? info.lastUnseenMessage.message
+                            : info.lastUnseenMessage.message.slice(0, 10) +
+                              "..."}
                         </div>
                       )}
                     </td>

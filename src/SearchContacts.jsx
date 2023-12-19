@@ -121,8 +121,8 @@ const Autocomplete = ({ sendDataToParent }) => {
   return (
     <>
       <button
-        className={`btn btn-ghost text-bold w-auto animate__animated   ${
-          animateButton ? "animate__flipInX" : ""
+        className={`btn btn-ghost text-bold w-auto animate__animated  animate__fast  ${
+          animateButton ? "animate__rubberBand" : ""
         } `}
         onClick={handleview}
       >

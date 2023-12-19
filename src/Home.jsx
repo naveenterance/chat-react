@@ -13,12 +13,12 @@ const Home = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="h-screen flex items-center justify-center    ">
-        <div className="grid grid-cols-2 rounded-lg   h-3/4  ">
+        <div className="grid grid-cols-2 gap-2 rounded-lg   h-3/4  ">
           <div
             className={
               view !== "login"
-                ? "animate__animated animate__fadeInDown hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-success justify-center items-center flex"
-                : "animate__animated animate__fadeInDown underline decoration-success text-success font-semibold decoration-4 group w-40 h-24 rounded-full border-4 border-transparent border-x-success justify-center items-center flex"
+                ? "animate__animated animate__rubberBand  btn  justify-center items-center flex w-full h-12 "
+                : "animate__animated animate__rubberBand  btn btn-primary hover:btn-primary justify-center items-center flex w-full h-12 "
             }
             onClick={() => handlesubmit("login")}
           >
@@ -34,8 +34,8 @@ const Home = () => {
           <div
             className={
               view === "login"
-                ? "animate__animated animate__fadeInDown hover:underline hover:decoration-success hover:text-success font-semibold hover:decoration-4 group w-40 h-24 rounded-full hover:border-4 border-transparent hover:border-x-success justify-center items-center flex"
-                : "animate__animated animate__fadeInDown underline decoration-success text-success font-semibold decoration-4 group w-40 h-24 rounded-full border-4 border-transparent border-x-success justify-center items-center flex"
+                ? "animate__animated animate__rubberBand  btn  justify-center items-center flex w-full h-12 "
+                : "animate__animated animate__rubberBand   btn btn-primary hover:btn-primary justify-center items-center flex w-full h-12 "
             }
             onClick={() => handlesubmit("signup")}
           >
