@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Page from "./Page";
 
 import { useQuery } from "react-query";
 import * as jose from "jose";
@@ -121,12 +122,19 @@ const MessageList = ({ user, onSelectMessageSender }) => {
                     <td>
                       {" "}
                       {info.lastUnseenMessage && (
-                        <div className="text-sm">
-                          {info.lastUnseenMessage.message.length <= 10
-                            ? info.lastUnseenMessage.message
-                            : info.lastUnseenMessage.message.slice(0, 10) +
-                              "..."}
-                        </div>
+                        <>
+                          <div className="text-sm">
+                            {info.lastUnseenMessage.message.length <= 10
+                              ? info.lastUnseenMessage.message
+                              : info.lastUnseenMessage.message.slice(0, 10) +
+                                "..."}
+                          </div>
+
+                          <Page
+                            sender={sender}
+                            message={info.lastUnseenMessage.message}
+                          />
+                        </>
                       )}
                     </td>
                   </tr>
